@@ -121,6 +121,170 @@ a{text-decoration:none;color:inherit}
   .side-nav{flex-direction:row;overflow:auto}
   .threads-section{display:none}
 }
+
+/* Enhanced responsive + motion layer */
+:root{--ease:cubic-bezier(.22,.8,.2,1)}
+body{background:radial-gradient(circle at 15% 10%,rgba(72,201,176,.12),transparent 28%),radial-gradient(circle at 85% 90%,rgba(22,160,133,.10),transparent 30%),var(--mint)}
+.sidebar{position:relative;box-shadow:12px 0 40px rgba(5,46,31,.08)}
+.sidebar:before{content:"";position:absolute;inset:-30% auto auto -30%;width:260px;height:260px;background:radial-gradient(circle,rgba(72,201,176,.18),transparent 68%);filter:blur(8px);animation:floatGlow 7s ease-in-out infinite}
+@keyframes floatGlow{0%,100%{transform:translate3d(0,0,0) scale(1)}50%{transform:translate3d(18px,24px,0) scale(1.08)}}
+.logo,.side-profile,.btn-new,.thread-item,.nav-btn,.side-foot{position:relative;z-index:1}
+.btn-new,.nav-btn,.thread-item,.med-card,.hint-chip,.icon-btn,.input-inner,.modal-card{transition:transform .28s var(--ease),box-shadow .28s var(--ease),border-color .28s var(--ease),background .28s var(--ease)}
+.btn-new:hover,.nav-btn:hover,.thread-item:hover,.med-card:hover,.hint-chip:hover{transform:translateY(-3px)}
+.btn-new{box-shadow:0 8px 24px rgba(255,255,255,.08)}
+.topbar{position:relative;z-index:5;box-shadow:0 4px 18px rgba(10,61,46,.04)}
+.topbar h2{animation:softIn .55s var(--ease) both}
+@keyframes softIn{from{opacity:0;transform:translateY(-8px)}to{opacity:1;transform:none}}
+.chat-wrap{scrollbar-width:thin;scrollbar-color:rgba(19,122,89,.25) transparent}
+.msg-row{animation:messageIn .5s var(--ease) both}
+@keyframes messageIn{from{opacity:0;transform:translateY(12px) scale(.985)}to{opacity:1;transform:none}}
+.bubble{transition:transform .25s var(--ease),box-shadow .25s var(--ease)}
+.bubble:hover{transform:translateY(-2px);box-shadow:0 10px 28px rgba(10,61,46,.08)}
+.med-card{position:relative;overflow:hidden}
+.med-card:before{content:"";position:absolute;top:-120%;left:-25%;width:45%;height:300%;transform:rotate(20deg);background:linear-gradient(90deg,transparent,rgba(255,255,255,.6),transparent);animation:shine 5s linear infinite}
+@keyframes shine{0%{left:-45%}55%,100%{left:120%}}
+.input-inner{animation:inputGlow 4s ease-in-out infinite}
+@keyframes inputGlow{0%,100%{box-shadow:0 6px 24px rgba(10,61,46,.08)}50%{box-shadow:0 8px 30px rgba(22,160,133,.13)}}
+.hint{overflow-x:auto;scrollbar-width:none;padding-bottom:2px}
+.hint::-webkit-scrollbar{display:none}
+.hint-chip{white-space:nowrap}
+.icon-btn.primary{box-shadow:0 6px 18px rgba(10,61,46,.18)}
+.icon-btn.primary:hover{transform:translateY(-2px) scale(1.04)}
+.modal-card{animation:modalIn .35s var(--ease) both}
+@keyframes modalIn{from{opacity:0;transform:translateY(20px) scale(.97)}to{opacity:1;transform:none}}
+@media(max-width:900px){
+ body{height:100dvh;min-height:100dvh;overflow:hidden}
+ .sidebar{width:100%;height:auto;min-height:0;display:block;flex-shrink:0;border-radius:0 0 22px 22px;box-shadow:0 8px 30px rgba(5,46,31,.14);overflow:visible}
+ .side-top{padding:12px 14px 10px;display:grid;grid-template-columns:1fr auto;gap:10px;align-items:center}
+ .logo{font-size:14px}
+ .mark{width:32px;height:32px}
+ .side-profile{margin-top:0;padding:8px 10px;min-width:130px}
+ .side-profile .avatar{width:30px;height:30px}
+ .side-nav{padding:8px 12px 10px;display:flex;gap:8px;overflow-x:auto;overflow-y:hidden}
+ .side-nav>.btn-new{flex:0 0 auto;width:auto;min-width:108px;height:40px;padding:0 14px}
+ .threads-section{display:none}
+ .bottom-nav{order:2;display:flex;gap:8px;margin:0;padding:0;border:0}
+ .nav-btn{flex:0 0 auto;width:auto;height:40px;padding:0 12px;border-radius:12px;white-space:nowrap}
+ .nav-btn[href="/logout"]{display:none}
+ .side-foot{display:none}
+ .main{min-height:0;flex:1}
+ .topbar{height:54px;padding:0 14px}
+ .topbar h2{font-size:16px;min-width:0;max-width:78%;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+ .topbar h2 span{max-width:44%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+ .chat-wrap{padding:14px 10px 8px;gap:12px}
+ .msg-row{gap:8px;max-width:100%}
+ .bubble-avatar{width:30px;height:30px;flex-basis:30px;border-radius:10px;font-size:12px}
+ .bubble-content{max-width:calc(100% - 38px)}
+ .bubble{font-size:13px;line-height:1.55;padding:13px 14px;border-radius:16px}
+ .struct-h{font-size:14px}
+ .struct-p,.struct-item{font-size:13px}
+ .meds-grid{grid-template-columns:1fr;gap:10px}
+ .med-card{padding:14px}
+ .med-grid{grid-template-columns:1fr 1fr}
+ .input-bar{padding:8px 10px calc(10px + env(safe-area-inset-bottom));background:linear-gradient(180deg,rgba(246,255,253,0),rgba(255,255,255,.98) 22%)}
+ .input-inner{border-radius:20px;padding:6px 6px 6px 10px;gap:5px}
+ .textarea{font-size:14px;min-height:22px;max-height:100px;padding:7px 0}
+ .icon-btn{width:38px;height:38px;flex-basis:38px;border-radius:11px}
+ .hint{margin-top:8px;gap:6px}
+ .hint-chip{font-size:11px;padding:6px 11px}
+ .modal{padding:10px;align-items:end}
+ .modal-card{width:100%;max-height:88dvh;border-radius:22px 22px 0 0}
+ .modal-head{padding:16px 16px 12px}
+ .modal-body{padding:14px 16px calc(16px + env(safe-area-inset-bottom))}
+ .grid2{grid-template-columns:1fr}
+ .field .input{height:44px;font-size:14px}
+ .time-row input[type=time]{height:40px}
+}
+@media(max-width:520px){
+ .side-top{grid-template-columns:1fr}
+ .side-profile{max-width:none}
+ .side-nav{padding-top:6px}
+ .bottom-nav{overflow-x:auto}
+ .topbar h2 span{display:none}
+ .chat-wrap{padding-left:8px;padding-right:8px}
+ .med-grid{grid-template-columns:1fr 1fr}
+ .struct-list{gap:5px}
+}
+@media(hover:none){
+ .btn-new:hover,.nav-btn:hover,.thread-item:hover,.med-card:hover,.hint-chip:hover,.bubble:hover,.icon-btn.primary:hover{transform:none}
+}
+@media(prefers-reduced-motion:reduce){
+ *,*::before,*::after{animation-duration:.001ms!important;animation-iteration-count:1!important;scroll-behavior:auto!important;transition:none!important}
+}
+
+/* Advanced animation layer */
+body::before{
+  content:"";position:fixed;inset:0;pointer-events:none;z-index:0;
+  background:
+    radial-gradient(circle at 20% 20%,rgba(72,201,176,.11),transparent 24%),
+    radial-gradient(circle at 80% 70%,rgba(22,160,133,.10),transparent 26%),
+    radial-gradient(circle at 55% 100%,rgba(10,61,46,.06),transparent 30%);
+  animation:ambientDrift 14s ease-in-out infinite alternate;
+}
+@keyframes ambientDrift{0%{transform:scale(1) translate3d(0,0,0)}100%{transform:scale(1.08) translate3d(-1%,1%,0)}}
+.sidebar::after{
+  content:"";position:absolute;inset:0;pointer-events:none;opacity:.35;
+  background:linear-gradient(120deg,transparent 15%,rgba(255,255,255,.08) 35%,transparent 55%);
+  background-size:220% 100%;animation:sideSweep 9s linear infinite;
+}
+@keyframes sideSweep{from{background-position:220% 0}to{background-position:-40% 0}}
+.mark{animation:logoFloat 3.5s ease-in-out infinite}
+@keyframes logoFloat{0%,100%{transform:translateY(0) rotate(0deg)}50%{transform:translateY(-3px) rotate(2deg)}}
+.avatar,.avatar-small{animation:avatarPulse 3.2s ease-in-out infinite}
+@keyframes avatarPulse{0%,100%{box-shadow:0 0 0 0 rgba(22,160,133,.18)}50%{box-shadow:0 0 0 7px rgba(22,160,133,.03)}}
+.btn-new{position:relative;overflow:hidden}
+.btn-new::after,.icon-btn.primary::after,.btn-primary::after{
+  content:"";position:absolute;inset:-2px;pointer-events:none;border-radius:inherit;
+  background:linear-gradient(115deg,transparent 20%,rgba(255,255,255,.32) 48%,transparent 76%);
+  transform:translateX(-130%);animation:buttonSweep 4.5s ease-in-out infinite;
+}
+@keyframes buttonSweep{0%,55%{transform:translateX(-130%)}75%,100%{transform:translateX(130%)}}
+.topbar{overflow:hidden}
+.topbar::after{content:"";position:absolute;left:-20%;bottom:0;width:40%;height:2px;background:linear-gradient(90deg,transparent,var(--g600),transparent);animation:topline 5s ease-in-out infinite}
+@keyframes topline{0%,100%{left:-25%}50%{left:85%}}
+.chat-wrap{position:relative}
+.chat-wrap::before{content:"";position:sticky;top:0;left:50%;display:block;width:180px;height:2px;margin:-3px auto 0;background:linear-gradient(90deg,transparent,var(--g600),transparent);opacity:.35;filter:blur(.5px);animation:chatPulse 3.5s ease-in-out infinite}
+@keyframes chatPulse{0%,100%{opacity:.12;transform:scaleX(.7)}50%{opacity:.55;transform:scaleX(1)}}
+.msg-row{transform-origin:bottom center}
+.msg-row.user{animation-name:userMessageIn}
+@keyframes userMessageIn{from{opacity:0;transform:translateX(18px) translateY(8px) scale(.98)}to{opacity:1;transform:none}}
+.msg-row:not(.user){animation-name:assistantMessageIn}
+@keyframes assistantMessageIn{from{opacity:0;transform:translateX(-18px) translateY(8px) scale(.98)}to{opacity:1;transform:none}}
+.bubble-avatar{transition:transform .3s ease,box-shadow .3s ease}
+.msg-row:hover .bubble-avatar{transform:translateY(-2px) rotate(-3deg);box-shadow:0 8px 18px rgba(10,61,46,.10)}
+.struct-h::after{content:"";width:34px;height:1px;margin-left:2px;background:linear-gradient(90deg,var(--g600),transparent);opacity:.35;animation:lineGrow 2.4s ease-in-out infinite alternate}
+@keyframes lineGrow{from{width:18px;opacity:.18}to{width:42px;opacity:.45}}
+.med-card{transform:translateZ(0)}
+.med-card:hover{transform:translateY(-6px) rotate(-.4deg);box-shadow:0 18px 36px rgba(10,61,46,.12)}
+.med-icon{animation:medBob 3s ease-in-out infinite}
+@keyframes medBob{0%,100%{transform:translateY(0)}50%{transform:translateY(-4px)}}
+.med-prec{animation:precautionGlow 4s ease-in-out infinite}
+@keyframes precautionGlow{0%,100%{box-shadow:0 0 0 rgba(255,204,0,0)}50%{box-shadow:0 0 18px rgba(255,204,0,.08)}}
+.icon-btn{position:relative;overflow:hidden}
+.icon-btn::before{content:"";position:absolute;width:10px;height:10px;border-radius:50%;background:rgba(255,255,255,.55);transform:scale(0);opacity:0}
+.icon-btn:active::before{animation:ripple .55s ease-out}
+@keyframes ripple{0%{transform:scale(0);opacity:.55}100%{transform:scale(7);opacity:0}}
+.textarea::placeholder{transition:opacity .3s ease,transform .3s ease}
+.input-inner:focus-within .textarea::placeholder{opacity:.45;transform:translateX(4px)}
+.hint-chip{position:relative;overflow:hidden}
+.hint-chip::after{content:"";position:absolute;top:0;bottom:0;width:18px;background:rgba(255,255,255,.4);filter:blur(5px);transform:translateX(-50px) skewX(-18deg);animation:chipShine 5s ease-in-out infinite}
+@keyframes chipShine{0%,55%{transform:translateX(-50px) skewX(-18deg)}75%,100%{transform:translateX(150px) skewX(-18deg)}}
+.modal{animation:backdropIn .28s ease both}
+@keyframes backdropIn{from{background:rgba(5,46,31,0);backdrop-filter:blur(0)}to{background:rgba(5,46,31,.45);backdrop-filter:blur(8px)}}
+.modal.open .modal-card{animation:modalBounce .6s cubic-bezier(.2,.9,.2,1.15) both}
+@keyframes modalBounce{0%{opacity:0;transform:translateY(40px) scale(.94)}70%{opacity:1;transform:translateY(-5px) scale(1.01)}100%{transform:none}}
+.time-row{animation:rowIn .35s ease both}
+@keyframes rowIn{from{opacity:0;transform:translateX(-8px)}to{opacity:1;transform:none}}
+@media(max-width:900px){
+  body::before{animation-duration:18s}
+  .topbar::after{animation-duration:6s}
+  .med-card:hover{transform:translateY(-2px)}
+  .msg-row:hover .bubble-avatar{transform:none;box-shadow:none}
+}
+@media(prefers-reduced-motion:reduce){
+  body::before,.sidebar::after,.mark,.avatar,.avatar-small,.btn-new::after,.icon-btn.primary::after,.btn-primary::after,.topbar::after,.chat-wrap::before,.struct-h::after,.med-icon,.med-prec,.hint-chip::after{animation:none!important}
+}
+
 </style>
 </head>
 <body>
@@ -226,11 +390,11 @@ a{text-decoration:none;color:inherit}
         <div class="field"><label class="label">End Date</label><input class="input" id="m_end" type="date"></div>
       </div>
       <div class="field">
-        <label class="label">Reminder Times — Email via SMTP</label>
+        <label class="label">Reminder Times</label>
         <div class="times-wrap" id="timesWrap"></div>
         <button type="button" onclick="addTimeRow()" style="margin-top:8px;background:var(--g50);border:1px dashed var(--g100);border-radius:10px;padding:8px 12px;font-size:12px;cursor:pointer">+ Add time</button>
       </div>
-      <button class="btn-primary" onclick="saveSchedule()">Save & Email Card (SMTP → {{ profile.email if profile else 'profile email' }})</button>
+      <button class="btn-primary" onclick="saveSchedule()">Save Reminder</button>
     </div>
   </div>
 </div>
@@ -315,7 +479,7 @@ function addMedicineCards(medicines, generalNotes){
       </div>
       ${med.instructions?`<div class="med-field" style="margin-top:8px"><label>Instructions</label><div>${med.instructions}</div></div>`:''}
       <div class="med-prec"><strong>⚠️ Precautions:</strong> ${med.precautions||'Take as prescribed.'}</div>
-      <button class="btn-schedule" onclick='openScheduler(${JSON.stringify(med).replace(/'/g, "&#39;")})'>Add Reminder (Email via SMTP)</button>
+      <button class="btn-schedule" onclick='openScheduler(${JSON.stringify(med).replace(/'/g, "&#39;")})'>Add Reminder</button>
     `;
     grid.appendChild(card);
   });
@@ -523,8 +687,8 @@ async function saveSchedule(){
     const data=await res.json();
     btn.innerText=orig; btn.disabled=false;
     if(data.success){
-      alert(`✅ Saved! Medication card emailed to ${data.email_sent_to||'your profile email'} at ${times.join(', ')}`);
-      addMessage('assistant', `### Schedule Created ✅\nReminder for **${payload.medicine_name}** saved.\n\n### Email Sent\n- Card sent to **${data.email_sent_to||'profile email'}** via SMTP\n- Times: **${times.join(', ')}**\n\n### Next Steps\n- You will get daily emails at these times\n- Manage in Medications page`);
+      alert(`✅ Saved! Medication card prepared for ${data.email_sent_to||'your profile email'} at ${times.join(', ')}`);
+      addMessage('assistant', `### Schedule Created ✅\nReminder for **${payload.medicine_name}** saved.\n\n### Email Sent\n- Reminder details sent to **${data.email_sent_to||'profile email'}**\n- Times: **${times.join(', ')}**\n\n### Next Steps\n- You will receive reminders at these times\n- Manage in Medications page`);
       closeModal();
     } else alert('Could not save: '+(data.error||'unknown'));
   }catch(e){ btn.innerText=orig; btn.disabled=false; alert('Error: '+e.message); }
@@ -572,5 +736,46 @@ renderHistory();
 bindUI();
 document.addEventListener('DOMContentLoaded', bindUI);
 </script>
-<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a2372842ad4fcc8c',t:'MTc4NTQ0MzgwNA=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a2372842ad4fcc8c',t:'MTc4NTQ0MzgwNA=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script>
+<script>
+(function(){
+  const root=document.body;
+  // Add a lightweight floating particle field without disturbing the UI.
+  const layer=document.createElement('div');
+  layer.className='cc-particles';
+  layer.innerHTML=Array.from({length:14},(_,i)=>`<span style="--i:${i}"></span>`).join('');
+  const style=document.createElement('style');
+  style.textContent=`
+    .cc-particles{position:fixed;inset:0;pointer-events:none;z-index:0;overflow:hidden;opacity:.55}
+    .cc-particles span{position:absolute;width:6px;height:6px;border-radius:50%;background:rgba(22,160,133,.18);left:calc((var(--i) * 7.3%) + 2%);top:calc((var(--i) * 11.1%) + 2%);animation:ccFloat calc(9s + var(--i) * .55s) ease-in-out infinite;animation-delay:calc(var(--i) * -.7s)}
+    @keyframes ccFloat{0%,100%{transform:translate3d(0,16px,0) scale(.8);opacity:.18}50%{transform:translate3d(calc((var(--i) - 7) * 7px),-34px,0) scale(1.35);opacity:.6}}
+    .sidebar,.main{position:relative;z-index:1}
+  `;
+  document.head.appendChild(style);
+  root.appendChild(layer);
+
+  // Gentle stagger for already-rendered chat items.
+  function restagger(){
+    document.querySelectorAll('.msg-row,.med-card').forEach((el,i)=>{ el.style.animationDelay=Math.min(i*.035,.35)+'s'; });
+  }
+  restagger();
+  const obs=new MutationObserver(restagger);
+  const chat=document.getElementById('chatWrap');
+  if(chat) obs.observe(chat,{childList:true,subtree:true});
+
+  // Tiny magnetic interaction for primary actions on pointer devices.
+  if(window.matchMedia('(hover:hover)').matches){
+    document.querySelectorAll('.btn-new,.icon-btn.primary,.btn-primary').forEach(btn=>{
+      btn.addEventListener('pointermove',e=>{
+        const r=btn.getBoundingClientRect();
+        const x=(e.clientX-r.left-r.width/2)/r.width*10;
+        const y=(e.clientY-r.top-r.height/2)/r.height*8;
+        btn.style.transform=`translate(${x}px,${y}px)`;
+      });
+      btn.addEventListener('pointerleave',()=>btn.style.transform='');
+    });
+  }
+})();
+</script>
+</body>
 </html>

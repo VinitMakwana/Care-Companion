@@ -3,173 +3,177 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Disclaimer & Terms - Care Companion</title>
+    <title>Before We Begin - Care Companion</title>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&family=Fraunces:wght@600;700&display=swap"
           rel="stylesheet">
     <style>
-        :root {
-            --g900: #0a3d2e;
-            --g600: #16a085;
-            --mint: #f6fffd
-        }
+:root{
+  --g950:#052e1f;--g900:#0a3d2e;--g800:#0f5d44;--g700:#137a59;--g600:#16a085;
+  --g400:#48c9b0;--g200:#a9e9d7;--g100:#d1f2e8;--g50:#e8f8f3;
+  --mint:#f6fffd;--ink:#0b1f18;--muted:#5b7c72;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  font-family:'Plus Jakarta Sans',sans-serif;background:var(--mint);color:var(--ink);
+  min-height:100vh;display:grid;place-items:center;padding:28px 18px;overflow-x:hidden;
+}
+body::before,body::after{
+  content:"";position:fixed;border-radius:50%;pointer-events:none;z-index:-2;
+  filter:blur(8px);opacity:.65;
+}
+body::before{width:360px;height:360px;left:-100px;top:-100px;background:radial-gradient(circle,rgba(22,160,133,.28),transparent 68%);animation:orb1 9s ease-in-out infinite alternate}
+body::after{width:440px;height:440px;right:-150px;bottom:-180px;background:radial-gradient(circle,rgba(72,201,176,.22),transparent 68%);animation:orb2 11s ease-in-out infinite alternate}
+a{color:var(--g800);font-weight:700;text-decoration:none}
+.bg{
+  position:fixed;inset:0;z-index:-3;
+  background:
+    radial-gradient(60% 70% at 18% 12%,rgba(22,160,133,.18),transparent 60%),
+    radial-gradient(55% 65% at 85% 85%,rgba(130,224,199,.18),transparent 60%),
+    linear-gradient(180deg,#f6fffd,#e8f8f3);
+  overflow:hidden;
+}
+.bg::before{
+  content:"";position:absolute;inset:-20%;
+  background-image:radial-gradient(circle,rgba(15,93,68,.16) 1px,transparent 1px);
+  background-size:26px 26px;opacity:.22;animation:drift 18s linear infinite;
+}
+.bg::after{
+  content:"";position:absolute;width:48vw;height:48vw;max-width:620px;max-height:620px;
+  left:50%;top:45%;transform:translate(-50%,-50%);
+  border:1px solid rgba(22,160,133,.10);border-radius:50%;
+  box-shadow:0 0 0 55px rgba(22,160,133,.025),0 0 0 110px rgba(22,160,133,.018);
+  animation:ring 8s ease-in-out infinite;
+}
+.wrap{
+  width:min(780px,100%);background:rgba(255,255,255,.88);backdrop-filter:blur(18px) saturate(150%);
+  border:1px solid rgba(10,61,46,.08);border-radius:32px;
+  box-shadow:0 30px 100px rgba(10,61,46,.14),0 8px 30px rgba(10,61,46,.06);
+  overflow:hidden;position:relative;animation:cardIn .9s cubic-bezier(.2,.8,.2,1) both;
+}
+.wrap::before{
+  content:"";position:absolute;inset:0;pointer-events:none;
+  background:linear-gradient(120deg,transparent 15%,rgba(255,255,255,.42) 35%,transparent 55%);
+  transform:translateX(-120%);animation:shine 7s ease-in-out infinite;
+}
+.header{
+  position:relative;background:linear-gradient(135deg,var(--g950),var(--g800),var(--g600));color:white;
+  padding:30px 32px 34px;overflow:hidden;
+}
+.header::before,.header::after{
+  content:"";position:absolute;border-radius:50%;background:rgba(255,255,255,.08);pointer-events:none;
+}
+.header::before{width:240px;height:240px;right:-110px;top:-130px;animation:float 7s ease-in-out infinite}
+.header::after{width:150px;height:150px;left:-80px;bottom:-90px;animation:float 8s ease-in-out infinite reverse}
+.brand-row{display:flex;align-items:center;gap:10px;margin-bottom:14px;position:relative;z-index:1}
+.brand-mark{width:38px;height:38px;border-radius:12px;background:white;color:var(--g900);display:grid;place-items:center;font-family:'Fraunces';font-weight:800;box-shadow:0 8px 22px rgba(0,0,0,.14);animation:markPulse 3s ease-in-out infinite}
+.brand-name{font-weight:800}
+.badge{background:rgba(255,255,255,.13);padding:5px 10px;border-radius:100px;font-size:11px;border:1px solid rgba(255,255,255,.10)}
+.header h1{font-family:'Fraunces';font-size:clamp(30px,5vw,38px);letter-spacing:-.025em;position:relative;z-index:1}
+.header p{margin-top:9px;color:#b9f2dd;line-height:1.6;font-size:14px;max-width:620px;position:relative;z-index:1}
+.body{padding:28px 32px 30px}
+.notice{
+  background:linear-gradient(135deg,#f0faf7,#f7fffc);border:1px solid #bfe9d9;border-radius:18px;padding:16px;
+  display:flex;gap:12px;align-items:flex-start;animation:fadeUp .7s .18s both;
+  box-shadow:0 8px 24px rgba(10,61,46,.05);
+}
+.notice-icon{width:38px;height:38px;border-radius:12px;background:var(--g900);color:white;display:grid;place-items:center;font-weight:800;flex:0 0 38px;box-shadow:0 6px 18px rgba(10,61,46,.15);animation:pulse 2.4s ease-in-out infinite}
+.notice strong{color:var(--g900)}
+.notice-copy{margin-top:5px;font-size:13px;line-height:1.65;color:#2f5d50}
+h3{font-family:'Fraunces';font-size:19px;color:var(--g900);margin-top:26px;animation:fadeUp .7s .28s both}
+.section-sub{margin-top:7px;font-size:12.5px;line-height:1.55;color:var(--muted);max-width:620px}
+ul{margin-top:11px;padding-left:0;list-style:none;color:#334e46;font-size:14px;line-height:1.7;display:grid;gap:9px}
+li{
+  position:relative;padding:11px 13px 11px 34px;background:rgba(248,253,251,.84);
+  border:1px solid var(--g100);border-radius:14px;transition:.25s;
+  animation:fadeUp .65s both;
+}
+li:nth-child(1){animation-delay:.08s}li:nth-child(2){animation-delay:.14s}li:nth-child(3){animation-delay:.20s}li:nth-child(4){animation-delay:.26s}li:nth-child(5){animation-delay:.32s}
+li::before{
+  content:'✓';position:absolute;left:12px;top:11px;width:18px;height:18px;border-radius:50%;
+  display:grid;place-items:center;background:var(--g900);color:white;font-size:10px;font-weight:800;
+}
+li:hover{transform:translateY(-2px);border-color:#bfe9d9;box-shadow:0 10px 24px rgba(10,61,46,.06)}
+.checks{margin-top:24px;display:grid;gap:12px}
+.check{
+  display:flex;gap:11px;align-items:flex-start;background:#fbfefd;border:1px solid var(--g100);
+  border-radius:15px;padding:13px 14px;transition:.25s;animation:fadeUp .7s both;
+}
+.check:nth-child(2){animation-delay:.1s}
+.check:hover{transform:translateX(3px);box-shadow:0 10px 24px rgba(10,61,46,.05)}
+.check input{margin-top:4px;accent-color:var(--g600);width:17px;height:17px;flex:0 0 auto}
+.check span{font-size:13px;line-height:1.55}
+.btn{
+  margin-top:24px;width:100%;height:54px;border-radius:100px;border:none;
+  background:linear-gradient(135deg,var(--g900),var(--g700));color:white;font-weight:700;font-size:15px;cursor:pointer;
+  position:relative;overflow:hidden;transition:.3s;box-shadow:0 8px 22px rgba(10,61,46,.18);
+}
+.btn::before{content:"";position:absolute;inset:0;background:linear-gradient(90deg,transparent,rgba(255,255,255,.22),transparent);transform:translateX(-120%);animation:buttonShine 3.5s infinite}
+.btn:hover:not(:disabled){transform:translateY(-2px);box-shadow:0 14px 32px rgba(10,61,46,.24)}
+.btn:active:not(:disabled){transform:translateY(0) scale(.99)}
+.btn:disabled{opacity:.45;cursor:not-allowed;box-shadow:none}
+.error{background:#fef2f2;border:1px solid #fecaca;color:#991b1b;padding:10px 12px;border-radius:12px;font-size:13px;margin-bottom:12px;animation:shake .4s ease}
+.helper{text-align:center;font-size:12px;color:var(--muted);margin-top:14px;line-height:1.5}
+.divider{height:1px;background:linear-gradient(90deg,transparent,rgba(10,61,46,.10),transparent);margin:26px 0 0}
+.footer-dot{display:inline-block;width:7px;height:7px;border-radius:50%;background:var(--g600);box-shadow:0 0 0 5px rgba(22,160,133,.12);animation:pulse 2s infinite;vertical-align:middle;margin-right:5px}
 
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box
-        }
+@keyframes cardIn{from{opacity:0;transform:translateY(34px) scale(.97)}to{opacity:1;transform:none}}
+@keyframes fadeUp{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:none}}
+@keyframes shine{0%,65%{transform:translateX(-120%)}85%,100%{transform:translateX(120%)}}
+@keyframes float{0%,100%{transform:translate3d(0,0,0)}50%{transform:translate3d(0,14px,0)}}
+@keyframes orb1{from{transform:translate(0,0) scale(1)}to{transform:translate(55px,30px) scale(1.12)}}
+@keyframes orb2{from{transform:translate(0,0) scale(1)}to{transform:translate(-45px,-35px) scale(1.08)}}
+@keyframes drift{from{transform:translate(0,0)}to{transform:translate(26px,26px)}}
+@keyframes ring{0%,100%{transform:translate(-50%,-50%) scale(.96);opacity:.55}50%{transform:translate(-50%,-50%) scale(1.04);opacity:.9}}
+@keyframes pulse{0%,100%{box-shadow:0 0 0 0 rgba(22,160,133,.18)}50%{box-shadow:0 0 0 9px rgba(22,160,133,0)}}
+@keyframes markPulse{0%,100%{transform:rotate(0) scale(1)}50%{transform:rotate(4deg) scale(1.05)}}
+@keyframes buttonShine{0%,45%{transform:translateX(-120%)}70%,100%{transform:translateX(120%)}}
+@keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-5px)}75%{transform:translateX(5px)}}
 
-        body {
-            font-family: 'Plus Jakarta Sans', sans-serif;
-            background: var(--mint);
-            min-height: 100vh;
-            display: grid;
-            place-items: center;
-            padding: 24px
-        }
-
-        .bg {
-            position: fixed;
-            inset: 0;
-            z-index: -1;
-            background: radial-gradient(70% 80% at 30% 20%, rgba(22, 160, 133, 0.2), transparent 60%), linear-gradient(180deg, #f6fffd, #e8f8f3)
-        }
-
-        .wrap {
-            width: min(760px, 100%);
-            background: white;
-            border: 1px solid rgba(10, 61, 46, 0.08);
-            border-radius: 32px;
-            box-shadow: 0 24px 80px rgba(10, 61, 46, 0.12);
-            overflow: hidden
-        }
-
-        .header {
-            background: linear-gradient(135deg, #0a3d2e, #0f5d44);
-            color: white;
-            padding: 32px
-        }
-
-        .header h1 {
-            font-family: 'Fraunces';
-            font-size: 34px;
-            letter-spacing: -0.02em
-        }
-
-        .header p {
-            margin-top: 8px;
-            color: #a7f3d0;
-            line-height: 1.5;
-            font-size: 14px
-        }
-
-        .body {
-            padding: 28px 32px
-        }
-
-        .notice {
-            background: #f0faf7;
-            border: 1px solid #bfe9d9;
-            border-radius: 16px;
-            padding: 16px;
-            display: flex;
-            gap: 12px
-        }
-
-        .notice-icon {
-            width: 36px;
-            height: 36px;
-            border-radius: 10px;
-            background: #0a3d2e;
-            color: white;
-            display: grid;
-            place-items: center;
-            font-weight: 800;
-            flex: 0 0 36px
-        }
-
-        h3 {
-            font-family: 'Fraunces';
-            font-size: 18px;
-            color: #0a3d2e;
-            margin-top: 22px
-        }
-
-        ul {
-            margin-top: 10px;
-            padding-left: 18px;
-            color: #334e46;
-            font-size: 14px;
-            line-height: 1.7
-        }
-
-        .checks {
-            margin-top: 24px;
-            display: grid;
-            gap: 12px
-        }
-
-        .check {
-            display: flex;
-            gap: 10px;
-            align-items: flex-start;
-            background: #f8fdfb;
-            border: 1px solid #d1f2e8;
-            border-radius: 14px;
-            padding: 12px 14px
-        }
-
-        .check input {
-            margin-top: 3px
-        }
-
-        .btn {
-            margin-top: 24px;
-            width: 100%;
-            height: 52px;
-            border-radius: 100px;
-            border: none;
-            background: #0a3d2e;
-            color: white;
-            font-weight: 700;
-            font-size: 15px;
-            cursor: pointer
-        }
-
-        .btn:disabled {
-            opacity: 0.5;
-            cursor: not-allowed
-        }
-
-        .error {
-            background: #fef2f2;
-            border: 1px solid #fecaca;
-            color: #991b1b;
-            padding: 10px 12px;
-            border-radius: 12px;
-            font-size: 13px;
-            margin-top: 12px
-        }
-
-        a {
-            color: #0f5d44;
-            font-weight: 700;
-            text-decoration: none
-        }
-    </style>
+@media(max-width:700px){
+  body{display:block;padding:12px 10px 18px;min-height:100dvh}
+  .wrap{border-radius:24px}
+  .header{padding:24px 20px 26px}
+  .body{padding:20px 18px 22px}
+  .header h1{font-size:30px}
+  .header p{font-size:13px}
+  .notice{padding:14px}
+  .notice-copy{font-size:12.5px}
+  h3{font-size:18px;margin-top:22px}
+  li{font-size:13px;padding:10px 11px 10px 32px}
+  .check{padding:12px}
+  .check span{font-size:12.5px}
+  .btn{height:52px;font-size:14px}
+}
+@media(max-width:430px){
+  body{padding:8px 6px 12px}
+  .wrap{border-radius:20px}
+  .brand-row{flex-wrap:wrap;gap:8px}
+  .badge{margin-left:46px;margin-top:-3px}
+  .header{padding:20px 16px 22px}
+  .body{padding:17px 14px 18px}
+  .notice{gap:9px}
+  .notice-icon{width:34px;height:34px;flex-basis:34px}
+  ul{gap:8px}
+  li{border-radius:12px}
+}
+@media(prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation:none !important;transition:none !important;scroll-behavior:auto !important}
+}
+</style>
 </head>
 <body>
 <div class="bg"></div>
 <div class="wrap">
     <div class="header">
-        <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px">
-            <div style="width:36px;height:36px;border-radius:10px;background:white;color:#0a3d2e;display:grid;place-items:center;font-family:Fraunces;font-weight:800">
+        <div class="brand-row">
+            <div class="brand-mark">
                 C
             </div>
-            <div style="font-weight:800">Care Companion</div>
-            <span style="background:rgba(255,255,255,0.15);padding:4px 10px;border-radius:100px;font-size:11px">First-time only</span>
+            <div class="brand-name">Care Companion</div>
+            <span class="badge">One-time setup</span>
         </div>
-        <h1>Disclaimer & Terms</h1>
+        <h1>Before We Begin</h1>
         <p>Please read carefully. You will see this only once when your profile is created. Modeled after August AI
             safety principles.</p>
     </div>
@@ -179,8 +183,8 @@
         {% endif %}
         <div class="notice">
             <div class="notice-icon">!</div>
-            <div><strong style="color:#0a3d2e">Important Safety Information</strong>
-                <div style="margin-top:4px;font-size:13px;line-height:1.6;color:#2f5d50">Care Companion is an AI health
+            <div><strong>Important Safety Information</strong>
+                <div class="notice-copy">Care Companion is an AI health
                     information assistant, not a medical professional. All content is for educational purpose only and
                     does NOT replace professional medical advice, diagnosis, or treatment. No definitive diagnosis, no
                     new prescriptions. Always consult qualified healthcare provider.
@@ -188,24 +192,14 @@
             </div>
         </div>
 
-        <h3>🛡️ How Care Companion works</h3>
+        <h3>🌿 What you can expect</h3>
+        <div class="section-sub">Care Companion is designed to make health information easier to understand and everyday care easier to manage.</div>
         <ul>
-            <li><strong>Knowledge-base first:</strong> Every query searches ChromaDB medical knowledge. If answer found,
-                it is used and cited. If not, Gemini 1.5 Flash (Gemini 3.6 Flash compatible) generates simple,
-                non-hallucinated answer.
-            </li>
-            <li><strong>Multimodal:</strong> Text, image (prescription PDF/image, skin disease/cut), voice (Faster
-                Whisper Large-v3) — voice response in your preferred language set in profile.
-            </li>
-            <li><strong>Prescription parser:</strong> Extracts Medicine name, Dosage, Frequency, Duration, Route,
-                Instructions + general precaution. One-click add to scheduler.
-            </li>
-            <li><strong>Skin assist:</strong> Gives general info, possible similar conditions (non-definitive),
-                precautions, red flags. Never definitive diagnosis.
-            </li>
-            <li><strong>Medication scheduler:</strong> Email reminder via profile email with medicine card + safety
-                guardrails.
-            </li>
+            <li><strong>Clear answers:</strong> Get simple explanations about symptoms, medicines, and everyday health questions.</li>
+            <li><strong>Different ways to ask:</strong> You can type, speak, or share a relevant prescription or health image.</li>
+            <li><strong>Medicine made simpler:</strong> Understand the medicines already prescribed to you, including how and when they are usually taken.</li>
+            <li><strong>Gentle support for skin concerns:</strong> Receive general care information and guidance on when professional attention may be appropriate.</li>
+            <li><strong>Helpful reminders:</strong> Keep track of medicines with reminders at the times you choose.</li>
         </ul>
 
         <h3>⚠️ Safety Guardrails</h3>
@@ -214,20 +208,18 @@
                 immediate emergency redirect (call 112 India).
             </li>
             <li>No dosage prescribing beyond your existing prescription.</li>
-            <li>Always includes disclaimer, encourages seeing doctor/pharmacist.</li>
-            <li>Respects profile: allergies, health conditions, preferred language.</li>
-            <li>Data: SQLite for auth & chat, ChromaDB for vectors. Private to user.</li>
+            <li>Always encourages professional medical advice when personal care is needed.</li>
+            <li>Never presents general information as a confirmed diagnosis or a new prescription.</li>
+            <li>Your conversations and profile are intended for your own Care Companion experience.</li>
         </ul>
 
         <h3>📜 Terms & Privacy (summary)</h3>
         <ul>
-            <li>You provide accurate profile info (name, age, weight, height, email, contact, emergency contact,
-                language, health conditions, allergies optional).
-            </li>
-            <li>You will NOT upload harmful, illegal, or non-medical NSFW content.</li>
-            <li>You understand AI may make mistakes; verify with professionals.</li>
-            <li>We do not share your data. Emails only for medication reminders.</li>
-            <li>This is not emergency service. For emergency call 112 / local ER.</li>
+            <li>Please provide accurate information so your Care Companion experience can be as helpful as possible.</li>
+            <li>Please use Care Companion responsibly and only for appropriate health-related questions.</li>
+            <li>Information may not always be perfect, so verify important personal medical decisions with a qualified professional.</li>
+            <li>Your information is intended to remain private within your Care Companion experience.</li>
+            <li>This is not an emergency service. For emergencies, call 112 or your local emergency service.</li>
         </ul>
 
         <form method="POST" id="form">
@@ -238,13 +230,12 @@
                 </label>
                 <label class="check">
                     <input type="checkbox" name="accept_terms" id="c2" required>
-                    <span style="font-size:13px;line-height:1.5"><strong>I accept Terms & Privacy and safety guardrails.</strong> I agree not to misuse, not to seek definitive diagnosis/prescription, and to use responsibly. I consent to storing my profile and chat for my own use.</span>
+                    <span style="font-size:13px;line-height:1.5"><strong>I accept the Terms, Privacy, and Safety Guidelines.</strong> I agree to use Care Companion responsibly and understand that it provides general health information rather than personal medical decisions.</span>
                 </label>
             </div>
             <button class="btn" type="submit" id="btn" disabled>Accept & Build My Health Profile →</button>
         </form>
-        <div style="margin-top:14px;text-align:center;font-size:12px;color:#5b7c72">You can review safety info anytime
-            in chat. Profile language controls response language.
+        <div style="margin-top:14px;text-align:center;font-size:12px;color:#5b7c72"><span class="footer-dot"></span>You can review these safety notes anytime in chat.
         </div>
     </div>
 </div>
@@ -253,40 +244,24 @@
 
     function update() {
         btn.disabled = !(c1.checked && c2.checked);
+        if(!btn.disabled){
+            btn.animate(
+              [{transform:'scale(.98)'},{transform:'scale(1.02)'},{transform:'scale(1)'}],
+              {duration:420,easing:'cubic-bezier(.2,.8,.2,1)'}
+            );
+        }
     }
 
     c1.addEventListener('change', update);
     c2.addEventListener('change', update);
-</script>
-<script>(function () {
-    function c() {
-        var b = a.contentDocument || (a.contentWindow && a.contentWindow.document);
-        if (b) {
-            var d = b.createElement('script');
-            d.innerHTML = "window.__CF$cv$params={r:'a2365bbf6addf4b7',t:'MTc4NTQzNTQyNw=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";
-            b.getElementsByTagName('head')[0].appendChild(d)
-        }
-    }
 
-    if (document.body) {
-        var a = document.createElement('iframe');
-        a.height = 1;
-        a.width = 1;
-        a.style.position = 'absolute';
-        a.style.top = 0;
-        a.style.left = 0;
-        a.style.border = 'none';
-        a.style.visibility = 'hidden';
-        document.body.appendChild(a);
-        if ('loading' !== document.readyState) c(); else if (window.addEventListener) document.addEventListener('DOMContentLoaded', c); else {
-            var e = document.onreadystatechange || function () {
-            };
-            document.onreadystatechange = function (b) {
-                e(b);
-                'loading' !== document.readyState && (document.onreadystatechange = e, c())
-            }
-        }
-    }
-})();</script>
+    document.getElementById('form').addEventListener('submit', function(){
+        btn.innerHTML='Starting your care journey <span aria-hidden="true">✨</span>';
+        btn.animate(
+          [{transform:'scale(1)'},{transform:'scale(.985)'},{transform:'scale(1)'}],
+          {duration:360,easing:'ease-out'}
+        );
+    });
+</script>
 </body>
 </html>

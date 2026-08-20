@@ -1,13 +1,20 @@
+```html
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Care Companion - Your Intelligent Healthcare Companion</title>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&display=swap"
-          rel="stylesheet">
+
+    <title>Care Companion - Your Health, Understood</title>
+
+    <link
+        href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&display=swap"
+        rel="stylesheet"
+    >
+
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+
     <style>
         :root {
             --green-950: #052e1f;
@@ -21,15 +28,22 @@
             --green-200: #a9e9d7;
             --green-100: #d1f2e8;
             --green-50: #e8f8f3;
+
             --mint: #f6fffd;
             --ink: #0b1f18;
             --muted: #5b7c72;
+
+            --motion-ease: cubic-bezier(.22, 1, .36, 1);
         }
 
         * {
             margin: 0;
             padding: 0;
-            box-sizing: border-box
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
         }
 
         body {
@@ -38,53 +52,289 @@
             color: var(--ink);
             overflow-x: hidden;
             -webkit-font-smoothing: antialiased;
+            cursor: none;
         }
 
-        h1, h2, h3 {
+        body.touch-device {
+            cursor: auto;
+        }
+
+        h1,
+        h2,
+        h3 {
             font-family: 'Fraunces', serif;
-            letter-spacing: -0.02em
+            letter-spacing: -0.02em;
         }
 
         a {
-            text-decoration: none
+            text-decoration: none;
+            color: inherit;
         }
 
-        /* Canvas BG */
+        button {
+            font-family: inherit;
+        }
+
+        /* =========================================
+           BACKGROUND
+        ========================================= */
+
         #bg-canvas {
             position: fixed;
             inset: 0;
             z-index: -2;
-            opacity: 0.9
+            width: 100%;
+            height: 100%;
+            opacity: 0.9;
+            pointer-events: none;
         }
 
         .gradient-mesh {
             position: fixed;
             inset: 0;
             z-index: -1;
-            background: radial-gradient(60% 80% at 20% 20%, rgba(22, 160, 133, 0.25), transparent 60%),
-            radial-gradient(50% 60% at 80% 20%, rgba(86, 200, 156, 0.25), transparent 60%),
-            radial-gradient(70% 70% at 50% 90%, rgba(10, 61, 46, 0.15), transparent 70%);
+            pointer-events: none;
+            background:
+                radial-gradient(
+                    60% 80% at 20% 20%,
+                    rgba(22,160,133,0.25),
+                    transparent 60%
+                ),
+                radial-gradient(
+                    50% 60% at 80% 20%,
+                    rgba(86,200,156,0.25),
+                    transparent 60%
+                ),
+                radial-gradient(
+                    70% 70% at 50% 90%,
+                    rgba(10,61,46,0.15),
+                    transparent 70%
+                );
             filter: blur(20px);
         }
 
-        /* Nav */
+        .noise::before {
+            content: '';
+            position: fixed;
+            inset: 0;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+            opacity: 0.02;
+            pointer-events: none;
+            z-index: 999;
+        }
+
+        /* =========================================
+           UNIQUE CARE PULSE CURSOR
+        ========================================= */
+
+        .care-cursor {
+            position: fixed;
+            left: 0;
+            top: 0;
+            width: 46px;
+            height: 46px;
+            pointer-events: none;
+            z-index: 99999;
+            transform: translate3d(-100px, -100px, 0);
+            opacity: 1;
+            transition:
+                width .3s var(--motion-ease),
+                height .3s var(--motion-ease),
+                opacity .3s ease;
+        }
+
+        .cursor-core {
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            width: 9px;
+            height: 9px;
+            transform: translate(-50%, -50%);
+            border-radius: 50%;
+            background: var(--green-600);
+            box-shadow:
+                0 0 12px rgba(22,160,133,.75),
+                0 0 28px rgba(22,160,133,.32);
+            transition:
+                transform .25s ease,
+                width .25s ease,
+                height .25s ease,
+                background .25s ease;
+        }
+
+        .cursor-halo {
+            position: absolute;
+            inset: 6px;
+            border-radius: 50%;
+            border: 1px solid rgba(22,160,133,.55);
+            background: rgba(232,248,243,.08);
+            backdrop-filter: blur(2px);
+            box-shadow:
+                0 0 24px rgba(22,160,133,.10),
+                inset 0 0 16px rgba(255,255,255,.15);
+            transition:
+                inset .35s var(--motion-ease),
+                border-color .25s ease,
+                background .25s ease;
+        }
+
+        .cursor-halo::before {
+            content: '';
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            width: 3px;
+            height: 3px;
+            transform: translate(-50%, -50%);
+            border-radius: 50%;
+            background: rgba(255,255,255,.95);
+            box-shadow:
+                0 -11px 0 rgba(255,255,255,.65),
+                0 11px 0 rgba(255,255,255,.65),
+                11px 0 0 rgba(255,255,255,.65),
+                -11px 0 0 rgba(255,255,255,.65);
+            opacity: .45;
+        }
+
+        .cursor-halo::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            border-radius: 50%;
+            border: 1px dashed rgba(22,160,133,.18);
+            animation: cursorSpin 8s linear infinite;
+        }
+
+        .cursor-pulse {
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            width: 14px;
+            height: 14px;
+            border: 1px solid rgba(22,160,133,.6);
+            border-radius: 50%;
+            transform: translate(-50%, -50%) scale(.6);
+            opacity: 0;
+        }
+
+        .care-cursor.is-moving .cursor-pulse {
+            animation: cursorPulse .9s ease-out;
+        }
+
+        .cursor-trail {
+            position: fixed;
+            left: 0;
+            top: 0;
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 99998;
+            background: rgba(72,201,176,.38);
+            filter: blur(1px);
+            opacity: .8;
+            transform: translate3d(-100px, -100px, 0);
+        }
+
+        body.cursor-hover .care-cursor {
+            width: 64px;
+            height: 64px;
+        }
+
+        body.cursor-hover .cursor-core {
+            width: 12px;
+            height: 12px;
+            transform: translate(-50%, -50%) scale(1.15);
+            background: var(--green-800);
+        }
+
+        body.cursor-hover .cursor-halo {
+            inset: 2px;
+            border-color: rgba(22,160,133,.8);
+            background: rgba(22,160,133,.055);
+            box-shadow:
+                0 0 30px rgba(22,160,133,.18),
+                inset 0 0 20px rgba(22,160,133,.06);
+        }
+
+        body.cursor-click .care-cursor {
+            width: 30px;
+            height: 30px;
+        }
+
+        body.cursor-click .cursor-core {
+            width: 15px;
+            height: 15px;
+            background: var(--green-400);
+        }
+
+        body.cursor-click .cursor-pulse {
+            animation: cursorClick .55s ease-out;
+        }
+
+        @keyframes cursorSpin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        @keyframes cursorPulse {
+            0% {
+                opacity: .8;
+                transform: translate(-50%, -50%) scale(.6);
+            }
+
+            100% {
+                opacity: 0;
+                transform: translate(-50%, -50%) scale(3.4);
+            }
+        }
+
+        @keyframes cursorClick {
+            0% {
+                opacity: .9;
+                transform: translate(-50%, -50%) scale(.7);
+            }
+
+            100% {
+                opacity: 0;
+                transform: translate(-50%, -50%) scale(3.6);
+            }
+        }
+
+        /* =========================================
+           NAVIGATION
+        ========================================= */
+
         .nav {
             position: fixed;
             top: 16px;
             left: 50%;
             transform: translateX(-50%);
             width: min(1120px, calc(100% - 32px));
-            height: 64px;
+            min-height: 64px;
             display: flex;
             align-items: center;
             justify-content: space-between;
             padding: 0 18px 0 20px;
-            background: rgba(255, 255, 255, 0.72);
+            gap: 15px;
+            background: rgba(255,255,255,0.72);
             backdrop-filter: blur(20px) saturate(180%);
-            border: 1px solid rgba(10, 61, 46, 0.08);
+            -webkit-backdrop-filter: blur(20px) saturate(180%);
+            border: 1px solid rgba(10,61,46,0.08);
             border-radius: 100px;
-            box-shadow: 0 8px 32px rgba(10, 61, 46, 0.08), 0 1px 2px rgba(10, 61, 46, 0.04);
+            box-shadow: 0 8px 32px rgba(10,61,46,0.08);
             z-index: 100;
+            animation: navFloat 6s ease-in-out infinite;
+            transition:
+                background .45s ease,
+                box-shadow .45s ease,
+                transform .35s var(--motion-ease);
+        }
+
+        .nav:hover {
+            transform: translateX(-50%) translateY(-2px);
+            box-shadow: 0 14px 42px rgba(10,61,46,.13);
         }
 
         .logo {
@@ -92,36 +342,52 @@
             align-items: center;
             gap: 10px;
             font-weight: 800;
-            letter-spacing: -0.02em
+            flex-shrink: 0;
         }
 
         .logo-mark {
+            position: relative;
             width: 36px;
             height: 36px;
             border-radius: 12px;
-            background: linear-gradient(135deg, var(--green-900), var(--green-600));
+            background: linear-gradient(
+                135deg,
+                var(--green-900),
+                var(--green-600)
+            );
             display: grid;
             place-items: center;
             color: white;
-            font-family: 'Fraunces';
+            font-family: 'Fraunces', serif;
             font-weight: 700;
-            box-shadow: 0 4px 16px rgba(22, 160, 133, 0.35);
+            box-shadow: 0 4px 16px rgba(22,160,133,0.35);
+            animation: logoPulse 3.5s ease-in-out infinite;
+        }
+
+        .logo-mark::after {
+            content: '';
+            position: absolute;
+            inset: -4px;
+            border-radius: 15px;
+            border: 1px solid rgba(72,201,176,.28);
+            animation: orbitGlow 3s linear infinite;
+            pointer-events: none;
         }
 
         .logo-text {
             font-size: 18px;
-            color: var(--green-900)
+            color: var(--green-900);
         }
 
         .logo-text span {
             color: var(--green-600);
-            font-weight: 400
+            font-weight: 400;
         }
 
         .nav-links {
             display: flex;
+            align-items: center;
             gap: 28px;
-            align-items: center
         }
 
         .nav-links a {
@@ -129,18 +395,18 @@
             font-weight: 500;
             color: var(--ink);
             opacity: 0.7;
-            transition: .2s
+            transition: .25s ease;
         }
 
         .nav-links a:hover {
             opacity: 1;
-            color: var(--green-800)
+            color: var(--green-800);
         }
 
         .nav-cta {
             display: flex;
-            gap: 10px;
-            align-items: center
+            align-items: center;
+            gap: 6px;
         }
 
         .btn {
@@ -153,48 +419,79 @@
             align-items: center;
             justify-content: center;
             gap: 8px;
-            transition: .3s cubic-bezier(.2, .8, .2, 1);
-            cursor: pointer;
+            transition:
+                transform .3s ease,
+                box-shadow .3s ease,
+                background .3s ease;
             border: none;
+            cursor: none;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            transform: translateX(-120%);
+            background: linear-gradient(
+                100deg,
+                transparent,
+                rgba(255,255,255,.22),
+                transparent
+            );
+            transition: transform .6s ease;
+        }
+
+        .btn:hover::after {
+            transform: translateX(120%);
         }
 
         .btn-ghost {
             background: transparent;
-            color: var(--green-900)
+            color: var(--green-900);
         }
 
         .btn-primary {
             background: var(--green-900);
             color: white;
-            box-shadow: 0 4px 16px rgba(10, 61, 46, 0.2)
+            box-shadow: 0 4px 16px rgba(10,61,46,0.2);
         }
 
         .btn-primary:hover {
-            transform: translateY(-1px);
-            box-shadow: 0 8px 24px rgba(10, 61, 46, 0.25);
-            background: #0e4d3a
+            transform: translateY(-2px) scale(1.02);
+            box-shadow: 0 8px 24px rgba(10,61,46,0.25);
         }
 
-        /* Hero */
+        .btn-xl {
+            height: 52px;
+            padding: 0 28px;
+            font-size: 16px;
+            border-radius: 100px;
+        }
+
+        /* =========================================
+           HERO
+        ========================================= */
+
         .hero {
             min-height: 100vh;
             display: flex;
             align-items: center;
             padding: 140px 24px 80px;
-            position: relative;
         }
 
         .hero-inner {
-            width: min(1120px, 100%);
+            width: min(1120px,100%);
             margin: 0 auto;
             display: grid;
-            grid-template-columns:1.1fr 0.9fr;
+            grid-template-columns: 1.1fr 0.9fr;
             gap: 40px;
             align-items: center;
         }
 
         .hero-copy h1 {
-            font-size: clamp(42px, 6vw, 78px);
+            font-size: clamp(42px,6vw,78px);
             line-height: 0.9;
             letter-spacing: -0.04em;
             color: var(--green-950);
@@ -202,11 +499,19 @@
 
         .hero-copy h1 .accent {
             color: transparent;
-            background: linear-gradient(135deg, var(--green-700), var(--green-400));
+            background:
+                linear-gradient(
+                    135deg,
+                    var(--green-700),
+                    var(--green-400),
+                    var(--green-600)
+                );
+            background-size: 200% 200%;
             -webkit-background-clip: text;
             background-clip: text;
             font-style: italic;
             font-weight: 500;
+            animation: textShimmer 5s ease-in-out infinite;
         }
 
         .hero-copy p {
@@ -214,21 +519,14 @@
             font-size: 18px;
             line-height: 1.6;
             color: var(--muted);
-            max-width: 520px
+            max-width: 520px;
         }
 
         .hero-actions {
             margin-top: 32px;
             display: flex;
             gap: 12px;
-            flex-wrap: wrap
-        }
-
-        .btn-xl {
-            height: 52px;
-            padding: 0 28px;
-            font-size: 16px;
-            border-radius: 100px
+            flex-wrap: wrap;
         }
 
         .pill {
@@ -236,15 +534,15 @@
             align-items: center;
             gap: 8px;
             background: white;
-            border: 1px solid rgba(10, 61, 46, 0.08);
+            border: 1px solid rgba(10,61,46,0.08);
             padding: 6px 14px;
             border-radius: 100px;
             font-size: 12px;
             font-weight: 600;
-            letter-spacing: 0.02em;
             color: var(--green-800);
-            box-shadow: 0 2px 12px rgba(10, 61, 46, 0.06);
-            margin-bottom: 18px
+            box-shadow: 0 2px 12px rgba(10,61,46,0.06);
+            margin-bottom: 18px;
+            animation: badgeFloat 4s ease-in-out infinite;
         }
 
         .dot {
@@ -252,45 +550,81 @@
             height: 8px;
             border-radius: 50%;
             background: var(--green-600);
-            box-shadow: 0 0 0 4px rgba(22, 160, 133, 0.15);
-            animation: pulse 2s infinite
+            box-shadow: 0 0 0 4px rgba(22,160,133,0.15);
+            animation: pulse 2s infinite;
         }
 
-        @keyframes pulse {
-            0% {
-                box-shadow: 0 0 0 4px rgba(22, 160, 133, 0.2)
-            }
-            50% {
-                box-shadow: 0 0 0 8px rgba(22, 160, 133, 0.07)
-            }
-            100% {
-                box-shadow: 0 0 0 4px rgba(22, 160, 133, 0.2)
-            }
-        }
-
-        /* Hero Visual - floating glass cards */
         .hero-visual {
             position: relative;
-            height: 560px
+            height: 560px;
+            perspective: 1200px;
+        }
+
+        .hero-visual::before,
+        .hero-visual::after {
+            content: '';
+            position: absolute;
+            border-radius: 50%;
+            pointer-events: none;
+        }
+
+        .hero-visual::before {
+            width: 100px;
+            height: 100px;
+            right: 4%;
+            top: 11%;
+            border: 1px solid rgba(22,160,133,.22);
+            box-shadow:
+                0 0 0 16px rgba(22,160,133,.025),
+                0 0 50px rgba(22,160,133,.12);
+            animation: orbOne 7s ease-in-out infinite;
+        }
+
+        .hero-visual::after {
+            width: 52px;
+            height: 52px;
+            left: 0;
+            top: 44%;
+            background: radial-gradient(
+                circle,
+                rgba(72,201,176,.30),
+                transparent 68%
+            );
+            animation: orbTwo 5s ease-in-out infinite;
         }
 
         .blob {
             position: absolute;
             inset: 0;
-            background: radial-gradient(60% 60% at 50% 50%, rgba(22, 160, 133, 0.25), rgba(22, 160, 133, 0.02));
+            background: radial-gradient(
+                60% 60% at 50% 50%,
+                rgba(22,160,133,0.25),
+                rgba(22,160,133,0.02)
+            );
             filter: blur(40px);
             border-radius: 50%;
-            transform: scale(0.9)
+            transform: scale(0.9);
+            animation: blobDrift 9s ease-in-out infinite;
         }
 
         .glass-card {
             position: absolute;
-            background: rgba(255, 255, 255, 0.7);
+            background: rgba(255,255,255,0.75);
             backdrop-filter: blur(24px) saturate(180%);
-            border: 1px solid rgba(255, 255, 255, 0.8);
+            -webkit-backdrop-filter: blur(24px) saturate(180%);
+            border: 1px solid rgba(255,255,255,0.8);
             border-radius: 24px;
-            box-shadow: 0 20px 60px rgba(10, 61, 46, 0.12), 0 1px 2px rgba(10, 61, 46, 0.04);
+            box-shadow: 0 20px 60px rgba(10,61,46,0.12);
             padding: 18px;
+            transition:
+                transform .5s var(--motion-ease),
+                box-shadow .5s ease,
+                border-color .5s ease;
+        }
+
+        .glass-card:hover {
+            box-shadow: 0 30px 80px rgba(10,61,46,.18);
+            border-color: rgba(72,201,176,.48);
         }
 
         .card-main {
@@ -298,7 +632,7 @@
             top: 10%;
             width: 84%;
             z-index: 3;
-            padding: 22px
+            padding: 22px;
         }
 
         .card-prescription {
@@ -306,7 +640,7 @@
             bottom: 18%;
             width: 62%;
             z-index: 2;
-            transform: rotate(-3deg)
+            transform: rotate(-3deg);
         }
 
         .card-skin {
@@ -314,7 +648,7 @@
             bottom: 4%;
             width: 58%;
             z-index: 4;
-            transform: rotate(4deg)
+            transform: rotate(4deg);
         }
 
         .chat-bubble {
@@ -324,29 +658,38 @@
             margin-bottom: 10px;
             font-size: 13px;
             line-height: 1.4;
-            box-shadow: 0 2px 12px rgba(0, 0, 0, 0.04)
+            box-shadow: 0 2px 12px rgba(0,0,0,0.04);
+            transition: transform .35s ease, box-shadow .35s ease;
+        }
+
+        .chat-bubble:hover {
+            transform: translateX(4px);
+            box-shadow: 0 8px 24px rgba(10,61,46,.08);
         }
 
         .chat-bubble.user {
-            align-self: flex-end;
             background: var(--green-900);
             color: white;
-            border-bottom-right-radius: 6px
+            border-bottom-right-radius: 6px;
         }
 
         .chat-bubble.assistant {
             background: #f6fffd;
             border: 1px solid var(--green-100);
-            border-bottom-left-radius: 6px
+            border-bottom-left-radius: 6px;
         }
 
         .med-card-mini {
             border-radius: 14px;
-            background: linear-gradient(135deg, #f0faf7, #e8f8f3);
+            background: linear-gradient(
+                135deg,
+                #f0faf7,
+                #e8f8f3
+            );
             border: 1px solid #bfe9d9;
             padding: 12px;
             display: flex;
-            gap: 10px
+            gap: 10px;
         }
 
         .med-icon {
@@ -357,18 +700,21 @@
             color: white;
             display: grid;
             place-items: center;
-            font-weight: 700
+            font-weight: 700;
         }
 
-        /* Sections */
+        /* =========================================
+           GENERAL SECTIONS
+        ========================================= */
+
         .section {
-            padding: 100px 24px;
-            position: relative
+            padding: 90px 24px;
+            position: relative;
         }
 
         .section-inner {
-            width: min(1120px, 100%);
-            margin: 0 auto
+            width: min(1120px,100%);
+            margin: 0 auto;
         }
 
         .kicker {
@@ -376,14 +722,14 @@
             font-weight: 700;
             letter-spacing: 0.14em;
             text-transform: uppercase;
-            color: var(--green-700)
+            color: var(--green-700);
         }
 
         .section-title {
-            font-size: clamp(32px, 5vw, 56px);
+            font-size: clamp(32px,5vw,52px);
             line-height: 0.95;
             margin-top: 12px;
-            color: var(--green-950)
+            color: var(--green-950);
         }
 
         .section-desc {
@@ -391,40 +737,64 @@
             font-size: 17px;
             line-height: 1.6;
             color: var(--muted);
-            max-width: 560px
+            max-width: 560px;
         }
 
-        /* Features grid */
+        /* =========================================
+           FEATURES
+        ========================================= */
+
         .features {
             display: grid;
-            grid-template-columns:repeat(12, 1fr);
+            grid-template-columns: repeat(12,1fr);
             gap: 18px;
-            margin-top: 48px
+            margin-top: 48px;
         }
 
         .feature {
-            background: rgba(255, 255, 255, 0.7);
+            background: rgba(255,255,255,0.7);
             backdrop-filter: blur(20px);
-            border: 1px solid rgba(10, 61, 46, 0.06);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(10,61,46,0.06);
             border-radius: 28px;
             padding: 28px;
-            box-shadow: 0 8px 32px rgba(10, 61, 46, 0.06);
-            transition: .4s cubic-bezier(.2, .8, .2, 1);
+            box-shadow: 0 8px 32px rgba(10,61,46,0.06);
+            transition:
+                transform .45s var(--motion-ease),
+                box-shadow .4s ease,
+                border-color .4s ease;
             position: relative;
-            overflow: hidden
+            overflow: hidden;
+        }
+
+        .feature::before,
+        .quote-card::before,
+        .step::before {
+            content: '';
+            position: absolute;
+            inset: -1px;
+            background:
+                linear-gradient(
+                    120deg,
+                    transparent 20%,
+                    rgba(72,201,176,.10) 45%,
+                    transparent 70%
+                );
+            transform: translateX(-130%);
+            transition: transform .9s ease;
+            pointer-events: none;
+        }
+
+        .feature:hover::before,
+        .quote-card:hover::before,
+        .step:hover::before {
+            transform: translateX(130%);
         }
 
         .feature:hover {
-            transform: translateY(-4px);
-            box-shadow: 0 20px 60px rgba(10, 61, 46, 0.12)
-        }
-
-        .feature::before {
-            content: '';
-            position: absolute;
-            inset: 0;
-            background: radial-gradient(80% 80% at 0% 0%, rgba(22, 160, 133, 0.12), transparent 60%);
-            pointer-events: none
+            transform: translateY(-9px) scale(1.01);
+            box-shadow: 0 20px 60px rgba(10,61,46,0.12);
+            border-color: rgba(72,201,176,.25);
         }
 
         .feature-icon {
@@ -436,66 +806,170 @@
             background: var(--green-50);
             color: var(--green-800);
             font-size: 20px;
-            margin-bottom: 18px
+            margin-bottom: 18px;
         }
 
         .feature h3 {
-            font-size: 20px;
-            margin-bottom: 8px
+            font-size: 19px;
+            margin-bottom: 8px;
         }
 
         .feature p {
             font-size: 14px;
             line-height: 1.6;
-            color: var(--muted)
+            color: var(--muted);
         }
 
         .feat-span-7 {
-            grid-column: span 7
+            grid-column: span 7;
         }
 
         .feat-span-5 {
-            grid-column: span 5
-        }
-
-        .feat-span-6 {
-            grid-column: span 6
+            grid-column: span 5;
         }
 
         .feat-span-4 {
-            grid-column: span 4
+            grid-column: span 4;
         }
 
-        .feat-span-8 {
-            grid-column: span 8
+        /* =========================================
+           QUOTES
+        ========================================= */
+
+        .quotes {
+            background: linear-gradient(
+                180deg,
+                #f6fffd 0%,
+                #e8f8f3 100%
+            );
+            border-top: 1px solid rgba(10,61,46,0.06);
+            border-bottom: 1px solid rgba(10,61,46,0.06);
         }
 
-        .feat-span-12 {
-            grid-column: span 12
+        .quotes-grid {
+            display: grid;
+            grid-template-columns:
+                repeat(auto-fit,minmax(300px,1fr));
+            gap: 18px;
+            margin-top: 48px;
         }
 
-        /* How it works - horizontal scroll illusion */
+        .quote-card {
+            background: white;
+            border: 1px solid rgba(10,61,46,0.06);
+            border-radius: 24px;
+            padding: 28px;
+            box-shadow: 0 8px 32px rgba(10,61,46,0.06);
+            position: relative;
+            overflow: hidden;
+            transition:
+                transform .45s var(--motion-ease),
+                box-shadow .45s ease;
+        }
+
+        .quote-card:hover {
+            transform: translateY(-8px) rotate(.35deg);
+            box-shadow: 0 24px 55px rgba(10,61,46,.13);
+        }
+
+        .quote-card::before {
+            content: '“';
+            inset: auto;
+            position: absolute;
+            top: 16px;
+            left: 20px;
+            font-family: 'Fraunces';
+            font-size: 64px;
+            line-height: 1;
+            color: var(--green-100);
+            font-weight: 700;
+            transform: none;
+        }
+
+        .quote-text {
+            font-family: 'Fraunces',serif;
+            font-size: 18px;
+            line-height: 1.4;
+            color: var(--green-950);
+            margin-top: 20px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .quote-author {
+            margin-top: 14px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .quote-avatar {
+            width: 36px;
+            height: 36px;
+            border-radius: 10px;
+            background: linear-gradient(
+                135deg,
+                var(--green-900),
+                var(--green-600)
+            );
+            color: white;
+            display: grid;
+            place-items: center;
+            font-weight: 700;
+            font-size: 13px;
+            transition: transform .4s ease;
+        }
+
+        .quote-card:hover .quote-avatar {
+            transform: rotate(-8deg) scale(1.08);
+        }
+
+        .quote-author b {
+            font-size: 13px;
+            color: var(--green-900);
+            display: block;
+        }
+
+        .quote-author span {
+            font-size: 11px;
+            color: var(--muted);
+        }
+
+        /* =========================================
+           HOW IT WORKS
+        ========================================= */
+
         .how {
             display: flex;
             gap: 18px;
             margin-top: 48px;
             overflow-x: auto;
             padding-bottom: 20px;
-            scrollbar-width: none
+            scrollbar-width: none;
         }
 
         .how::-webkit-scrollbar {
-            display: none
+            display: none;
         }
 
         .step {
-            min-width: 320px;
-            flex: 0 0 320px;
+            min-width: 300px;
+            flex: 0 0 300px;
             background: white;
             border-radius: 24px;
             padding: 24px;
-            border: 1px solid rgba(10, 61, 46, 0.06);
-            box-shadow: 0 8px 32px rgba(10, 61, 46, 0.06)
+            border: 1px solid rgba(10,61,46,0.06);
+            box-shadow: 0 8px 32px rgba(10,61,46,0.06);
+            position: relative;
+            overflow: hidden;
+            transition:
+                transform .45s var(--motion-ease),
+                box-shadow .45s ease;
+        }
+
+        .step:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 20px 52px rgba(10,61,46,.12);
         }
 
         .step-num {
@@ -503,30 +977,45 @@
             font-size: 42px;
             font-weight: 700;
             line-height: 1;
-            color: var(--green-200)
+            color: var(--green-200);
+            transition: transform .45s ease,color .45s ease;
+        }
+
+        .step:hover .step-num {
+            transform: translateX(5px) scale(1.08);
+            color: var(--green-400);
         }
 
         .step h4 {
             margin-top: 12px;
-            font-size: 18px
+            font-size: 18px;
         }
 
         .step p {
             margin-top: 8px;
             font-size: 14px;
             line-height: 1.5;
-            color: var(--muted)
+            color: var(--muted);
         }
 
-        /* Safety */
+        /* =========================================
+           SAFETY
+        ========================================= */
+
         .safety {
-            background: linear-gradient(180deg, var(--green-900) 0%, #061e16 100%);
+            background: linear-gradient(
+                180deg,
+                var(--green-900) 0%,
+                #061e16 100%
+            );
             color: #c8f0e3;
             border-radius: 40px;
             margin: 40px 24px;
             padding: 60px 24px;
             position: relative;
-            overflow: hidden
+            overflow: hidden;
+            box-shadow: 0 24px 90px rgba(10,61,46,.16);
+            animation: safetyBreath 8s ease-in-out infinite;
         }
 
         .safety::before {
@@ -536,133 +1025,133 @@
             height: 600px;
             right: -100px;
             top: -100px;
-            background: radial-gradient(circle, rgba(22, 160, 133, 0.3), transparent 70%);
-            filter: blur(20px)
+            background:
+                radial-gradient(
+                    circle,
+                    rgba(22,160,133,0.3),
+                    transparent 70%
+                );
+            filter: blur(20px);
+        }
+
+        .safety::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            pointer-events: none;
+            background:
+                linear-gradient(
+                    115deg,
+                    transparent 0%,
+                    rgba(255,255,255,.035) 35%,
+                    transparent 60%
+                );
+            transform: translateX(-120%);
+            animation: safetySweep 8s ease-in-out infinite;
         }
 
         .safety-inner {
-            width: min(1120px, 100%);
+            width: min(1120px,100%);
             margin: 0 auto;
             display: grid;
-            grid-template-columns:1fr 1fr;
+            grid-template-columns: 1fr 1fr;
             gap: 40px;
             position: relative;
-            z-index: 1
+            z-index: 1;
         }
 
         .safety h2 {
             color: white;
-            font-size: clamp(28px, 4vw, 44px);
-            line-height: 1
+            font-size: clamp(28px,4vw,44px);
+            line-height: 1;
         }
 
         .safety p {
             color: #8abfb0;
             margin-top: 14px;
-            line-height: 1.6
+            line-height: 1.6;
         }
 
         .safety-list {
             margin-top: 24px;
             display: grid;
-            gap: 12px
+            gap: 12px;
         }
 
         .safety-item {
             display: flex;
             gap: 12px;
-            background: rgba(255, 255, 255, 0.06);
-            border: 1px solid rgba(255, 255, 255, 0.08);
+            background: rgba(255,255,255,0.06);
+            border: 1px solid rgba(255,255,255,0.08);
             padding: 14px 16px;
-            border-radius: 16px
+            border-radius: 16px;
+            transition:
+                transform .35s ease,
+                background .35s ease;
         }
 
-        .safety-item span {
-            color: var(--green-300)
+        .safety-item:hover {
+            transform: translateX(7px);
+            background: rgba(255,255,255,.10);
         }
 
-        /* Footer */
-        .footer {
-            padding: 60px 24px;
-            border-top: 1px solid rgba(10, 61, 46, 0.06);
-            background: rgba(255, 255, 255, 0.6)
+        .safety-item > span {
+            color: var(--green-300);
         }
 
-        .foot-inner {
-            width: min(1120px, 100%);
-            margin: 0 auto;
-            display: flex;
-            justify-content: space-between;
-            flex-wrap: wrap;
-            gap: 24px
+        .soft-cta {
+            display: inline-flex;
+            align-items: center;
+            background: white;
+            color: var(--green-900);
+            padding: 8px 14px;
+            border-radius: 100px;
+            font-size: 12px;
+            font-weight: 700;
+            box-shadow: 0 8px 24px rgba(0,0,0,.08);
+            transition:
+                transform .35s ease,
+                box-shadow .35s ease;
         }
 
-        /* Responsive */
-        @media (max-width: 900px) {
-            .hero-inner {
-                grid-template-columns:1fr
-            }
-
-            .hero-visual {
-                height: 460px;
-                order: -1
-            }
-
-            .features .feature {
-                grid-column: span 12 !important
-            }
-
-            .safety-inner {
-                grid-template-columns:1fr
-            }
-
-            .nav-links {
-                display: none
-            }
+        .soft-cta:hover {
+            transform: translateY(-3px) scale(1.03);
+            box-shadow: 0 14px 30px rgba(0,0,0,.12);
         }
 
-        /* Cursor follower */
-        .cursor-dot {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 8px;
-            height: 8px;
-            background: var(--green-600);
-            border-radius: 50%;
-            pointer-events: none;
-            z-index: 9999;
-            mix-blend-mode: multiply;
-            opacity: 0.7
-        }
+        /* =========================================
+           MARQUEE
+        ========================================= */
 
-        .cursor-ring {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 40px;
-            height: 40px;
-            border: 1px solid rgba(22, 160, 133, 0.3);
-            border-radius: 50%;
-            pointer-events: none;
-            z-index: 9998;
-            transition: transform .15s ease-out
-        }
-
-        /* Marquee */
         .marquee {
             overflow: hidden;
             white-space: nowrap;
-            border-top: 1px solid rgba(10, 61, 46, 0.06);
-            border-bottom: 1px solid rgba(10, 61, 46, 0.06);
+            border-top: 1px solid rgba(10,61,46,0.06);
+            border-bottom: 1px solid rgba(10,61,46,0.06);
             background: white;
-            padding: 14px 0
+            padding: 14px 0;
+            position: relative;
+        }
+
+        .marquee::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background:
+                linear-gradient(
+                    90deg,
+                    rgba(246,255,253,1),
+                    transparent 8%,
+                    transparent 92%,
+                    rgba(246,255,253,1)
+                );
+            pointer-events: none;
         }
 
         .marquee-track {
             display: inline-flex;
-            animation: marquee 28s linear infinite;
-            gap: 32px
+            animation: marquee 22s linear infinite;
+            gap: 32px;
         }
 
         .marquee-item {
@@ -673,489 +1162,2499 @@
             color: var(--green-900);
             font-size: 13px;
             letter-spacing: 0.06em;
-            text-transform: uppercase
+            text-transform: uppercase;
+        }
+
+        /* =========================================
+           FOOTER
+        ========================================= */
+
+        .footer {
+            padding: 60px 24px;
+            border-top: 1px solid rgba(10,61,46,0.06);
+            background: rgba(255,255,255,0.6);
+        }
+
+        .foot-inner {
+            width: min(1120px,100%);
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 24px;
+        }
+
+        /* =========================================
+           ANIMATIONS
+        ========================================= */
+
+        @keyframes pulse {
+            0% {
+                box-shadow: 0 0 0 4px rgba(22,160,133,0.2);
+            }
+
+            50% {
+                box-shadow: 0 0 0 8px rgba(22,160,133,0.07);
+            }
+
+            100% {
+                box-shadow: 0 0 0 4px rgba(22,160,133,0.2);
+            }
+        }
+
+        @keyframes navFloat {
+            0%,100% {
+                margin-top: 0;
+            }
+
+            50% {
+                margin-top: 3px;
+            }
+        }
+
+        @keyframes logoPulse {
+            0%,100% {
+                box-shadow: 0 4px 16px rgba(22,160,133,.30);
+            }
+
+            50% {
+                box-shadow: 0 8px 28px rgba(22,160,133,.48);
+            }
+        }
+
+        @keyframes orbitGlow {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        @keyframes badgeFloat {
+            0%,100% {
+                transform: translateY(0);
+            }
+
+            50% {
+                transform: translateY(-4px);
+            }
+        }
+
+        @keyframes textShimmer {
+            0%,100% {
+                background-position: 0% 50%;
+            }
+
+            50% {
+                background-position: 100% 50%;
+            }
+        }
+
+        @keyframes blobDrift {
+            0%,100% {
+                transform: scale(.92) rotate(0deg);
+            }
+
+            50% {
+                transform: scale(1.08) rotate(8deg);
+            }
+        }
+
+        @keyframes orbOne {
+            0%,100% {
+                transform: translate3d(0,0,0) scale(1);
+            }
+
+            50% {
+                transform: translate3d(-18px,22px,0) scale(1.12);
+            }
+        }
+
+        @keyframes orbTwo {
+            0%,100% {
+                transform: translate3d(0,0,0);
+            }
+
+            50% {
+                transform: translate3d(22px,-18px,0);
+            }
+        }
+
+        @keyframes safetyBreath {
+            0%,100% {
+                transform: translateY(0);
+            }
+
+            50% {
+                transform: translateY(-4px);
+            }
+        }
+
+        @keyframes safetySweep {
+            0%,35% {
+                transform: translateX(-120%);
+            }
+
+            70%,100% {
+                transform: translateX(120%);
+            }
         }
 
         @keyframes marquee {
             0% {
-                transform: translateX(0)
+                transform: translateX(0);
             }
+
             100% {
-                transform: translateX(-50%)
+                transform: translateX(-50%);
             }
         }
 
-        /* Noise */
-        .noise::before {
-            content: '';
-            position: fixed;
-            inset: 0;
-            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
-            opacity: 0.02;
-            pointer-events: none;
-            z-index: 999
+        /* =========================================
+           MOBILE
+        ========================================= */
+
+        @media (max-width: 900px) {
+
+            .nav {
+                top: 10px;
+                width: calc(100% - 20px);
+                min-height: 58px;
+                padding: 0 10px 0 14px;
+            }
+
+            .logo {
+                gap: 8px;
+            }
+
+            .logo-mark {
+                width: 34px;
+                height: 34px;
+                border-radius: 11px;
+            }
+
+            .logo-text {
+                font-size: 16px;
+            }
+
+            .nav-links {
+                display: none;
+            }
+
+            .nav-cta .btn {
+                height: 38px;
+                padding: 0 12px;
+                font-size: 12px;
+            }
+
+            .nav-cta .btn-ghost {
+                display: none;
+            }
+
+            .hero {
+                min-height: auto;
+                padding: 105px 16px 48px;
+            }
+
+            .hero-inner {
+                grid-template-columns: 1fr;
+                gap: 12px;
+            }
+
+            .hero-copy {
+                text-align: center;
+            }
+
+            .hero-copy h1 {
+                font-size: clamp(42px,13vw,62px);
+                line-height: .92;
+            }
+
+            .hero-copy p {
+                font-size: 15px;
+                line-height: 1.6;
+                margin: 18px auto 0;
+                max-width: 620px;
+            }
+
+            .pill {
+                font-size: 10px;
+                padding: 6px 12px;
+                margin-bottom: 14px;
+            }
+
+            .hero-actions {
+                justify-content: center;
+                margin-top: 24px;
+            }
+
+            .btn-xl {
+                height: 48px;
+                padding: 0 20px;
+                font-size: 14px;
+                width: 100%;
+            }
+
+            .hero-actions .btn {
+                max-width: 360px;
+            }
+
+            .hero-visual {
+                height: 430px;
+                order: -1;
+                width: 100%;
+                max-width: 520px;
+                margin: 0 auto;
+                transform: scale(.96);
+                transform-origin: center top;
+            }
+
+            .card-main {
+                left: 5%;
+                top: 8%;
+                width: 90%;
+                padding: 16px;
+                border-radius: 20px;
+            }
+
+            .card-prescription {
+                left: 0;
+                bottom: 14%;
+                width: 60%;
+                padding: 14px;
+                border-radius: 18px;
+            }
+
+            .card-skin {
+                right: 0;
+                bottom: 1%;
+                width: 57%;
+                padding: 14px;
+                border-radius: 18px;
+            }
+
+            .chat-bubble {
+                font-size: 11px;
+                padding: 10px 12px;
+            }
+
+            .med-card-mini {
+                padding: 10px;
+            }
+
+            .med-icon {
+                width: 32px;
+                height: 32px;
+            }
+
+            .section {
+                padding: 62px 16px;
+            }
+
+            .section-title {
+                font-size: clamp(32px,10vw,46px);
+            }
+
+            .section-desc {
+                font-size: 14px;
+                line-height: 1.65;
+            }
+
+            .features {
+                display: grid;
+                grid-template-columns: 1fr;
+                gap: 14px;
+                margin-top: 30px;
+            }
+
+            .features .feature {
+                grid-column: 1 !important;
+                padding: 22px;
+                border-radius: 22px;
+            }
+
+            .feature h3 {
+                font-size: 18px;
+            }
+
+            .feature p {
+                font-size: 13px;
+            }
+
+            .quotes-grid {
+                grid-template-columns: 1fr;
+                gap: 14px;
+                margin-top: 30px;
+            }
+
+            .quote-card {
+                padding: 22px;
+                border-radius: 20px;
+            }
+
+            .quote-text {
+                font-size: 17px;
+            }
+
+            .quote-card::before {
+                font-size: 52px;
+            }
+
+            .how {
+                gap: 12px;
+                margin-top: 30px;
+                padding-bottom: 12px;
+                margin-right: -16px;
+                padding-right: 16px;
+                scroll-snap-type: x mandatory;
+            }
+
+            .step {
+                min-width: 82vw;
+                flex-basis: 82vw;
+                padding: 22px;
+                border-radius: 20px;
+                scroll-snap-align: start;
+            }
+
+            .step-num {
+                font-size: 36px;
+            }
+
+            .safety {
+                margin: 18px 10px;
+                padding: 42px 18px;
+                border-radius: 28px;
+            }
+
+            .safety-inner {
+                grid-template-columns: 1fr;
+                gap: 24px;
+            }
+
+            .safety h2 {
+                font-size: 34px;
+            }
+
+            .safety-item {
+                padding: 12px 13px;
+                border-radius: 14px;
+            }
+
+            .marquee {
+                padding: 12px 0;
+            }
+
+            .marquee-item {
+                font-size: 11px;
+            }
+
+            .marquee-track {
+                gap: 22px;
+            }
+
+            .footer {
+                padding: 46px 16px;
+            }
+
+            .foot-inner {
+                display: grid;
+                grid-template-columns: 1fr;
+                gap: 26px;
+            }
+        }
+
+        @media (max-width: 520px) {
+
+            body {
+                font-size: 14px;
+            }
+
+            .hero-visual {
+                height: 370px;
+                transform: scale(.94);
+            }
+
+            .card-main {
+                top: 5%;
+                width: 94%;
+                left: 3%;
+            }
+
+            .card-prescription {
+                bottom: 12%;
+                width: 64%;
+            }
+
+            .card-skin {
+                bottom: 0;
+                width: 60%;
+            }
+
+            .hero-copy h1 {
+                font-size: clamp(40px,13vw,54px);
+            }
+
+            .hero-copy p {
+                font-size: 14px;
+            }
+
+            .hero-actions .btn {
+                max-width: none;
+            }
+
+            .section {
+                padding: 54px 14px;
+            }
+
+            .section-title {
+                font-size: 34px;
+            }
+
+            .feature-icon {
+                width: 40px;
+                height: 40px;
+                margin-bottom: 14px;
+            }
+
+            .quote-card {
+                padding: 20px;
+            }
+
+            .quote-text {
+                font-size: 16px;
+            }
+
+            .safety {
+                margin: 12px 8px;
+                padding: 36px 15px;
+            }
+
+            .safety h2 {
+                font-size: 30px;
+            }
+        }
+
+        @media (max-width: 380px) {
+
+            .logo-text {
+                font-size: 14px;
+            }
+
+            .nav-cta .btn-primary {
+                padding: 0 10px;
+            }
+
+            .hero {
+                padding-top: 96px;
+            }
+
+            .hero-visual {
+                height: 340px;
+                transform: scale(.9);
+            }
+
+            .hero-copy h1 {
+                font-size: 39px;
+            }
+
+            .btn-xl {
+                font-size: 13px;
+            }
+        }
+
+        @media (pointer: coarse) {
+
+            body {
+                cursor: auto;
+            }
+
+            .care-cursor,
+            .cursor-trail {
+                display: none !important;
+            }
+
+            .btn {
+                cursor: pointer;
+            }
+
+            .feature:hover,
+            .quote-card:hover,
+            .step:hover,
+            .glass-card:hover {
+                transform: none;
+            }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+
+            *,
+            *::before,
+            *::after {
+                animation-duration: .01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: .01ms !important;
+                scroll-behavior: auto !important;
+            }
         }
     </style>
 </head>
+
 <body class="noise">
-<canvas id="bg-canvas"></canvas>
-<div class="gradient-mesh"></div>
-<div class="cursor-dot" id="cursorDot"></div>
-<div class="cursor-ring" id="cursorRing"></div>
 
-<nav class="nav" id="nav">
-    <div class="logo">
-        <div class="logo-mark">C</div>
-        <div class="logo-text">Care <span>Companion</span></div>
-    </div>
-    <div class="nav-links">
-        <a href="#features">Features</a>
-        <a href="#how">How it works</a>
-        <a href="#safety">Safety</a>
-    </div>
-    <div class="nav-cta">
-        <a href="/login" class="btn btn-ghost">Log in</a>
-        <a href="/register" class="btn btn-primary">Start — it's free</a>
-    </div>
-</nav>
+    <canvas id="bg-canvas"></canvas>
+    <div class="gradient-mesh"></div>
 
-<section class="hero">
-    <div class="hero-inner">
-        <div class="hero-copy">
-            <div class="pill"><span class="dot"></span> MULTIMODAL • MULTILINGUAL • SECURE</div>
-            <h1 id="heroTitle">Healthcare<br>that truly<br><span class="accent">listens to you</span></h1>
-            <p id="heroDesc">Meet Care Companion — an August AI inspired assistant that understands text, voice,
-                prescriptions & skin images. Knowledge-base verified, safety-guarded, and in your language.</p>
-            <div class="hero-actions" id="heroActions">
-                <a href="/register" class="btn btn-primary btn-xl">✨ Create your health profile →</a>
-                <a href="#features" class="btn btn-ghost btn-xl">See how it works</a>
-            </div>
-            <div style="margin-top:18px;display:flex;gap:18px;align-items:center;font-size:12px;color:var(--muted)">
-                <span>✓ No credit card</span><span>✓ Private & encrypted</span><span>✓ 11 languages</span>
+    <!-- UNIQUE CURSOR -->
+    <div class="care-cursor" id="careCursor">
+        <div class="cursor-core"></div>
+        <div class="cursor-halo"></div>
+        <div class="cursor-pulse"></div>
+    </div>
+
+    <div class="cursor-trail" id="cursorTrail"></div>
+
+
+    <!-- =========================================
+         NAVIGATION
+    ========================================= -->
+
+    <nav class="nav" id="nav">
+
+        <div class="logo">
+            <div class="logo-mark">C</div>
+
+            <div class="logo-text">
+                Care <span>Companion</span>
             </div>
         </div>
-        <div class="hero-visual" id="heroVisual">
-            <div class="blob" id="blob"></div>
-            <div class="glass-card card-main" id="cardMain">
-                <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px">
-                    <strong style="font-size:13px;letter-spacing:0.06em;color:var(--green-800)">CHAT PREVIEW</strong>
-                    <span style="font-size:11px;background:var(--green-100);padding:4px 8px;border-radius:100px;color:var(--green-800)">Live • Knowledge Verified</span>
+
+        <div class="nav-links">
+            <a href="#features">Care</a>
+            <a href="#quotes">Stories</a>
+            <a href="#how">How it works</a>
+        </div>
+
+        <div class="nav-cta">
+            <a href="/login" class="btn btn-ghost">Log in</a>
+            <a href="/register" class="btn btn-primary">Start free</a>
+        </div>
+
+    </nav>
+
+
+    <!-- =========================================
+         HERO
+    ========================================= -->
+
+    <section class="hero">
+
+        <div class="hero-inner">
+
+            <div class="hero-copy">
+
+                <div class="pill">
+                    <span class="dot"></span>
+                    Private • Secure • Always Here
                 </div>
-                <div class="chat-bubble assistant">Hi Aarav! I see you uploaded a prescription. Let me extract the
-                    medicines for you...
+
+                <h1 id="heroTitle">
+                    Your health,
+                    <br>
+                    finally
+                    <br>
+                    <span class="accent">understood</span>
+                </h1>
+
+                <p id="heroDesc">
+                    A gentle companion for everyday health worries —
+                    helping you understand what matters, feel less
+                    overwhelmed, and take the next small step with confidence.
+                </p>
+
+                <div class="hero-actions" id="heroActions">
+
+                    <a
+                        href="/register"
+                        class="btn btn-primary btn-xl"
+                    >
+                        ✨ Start your care journey →
+                    </a>
+
+                    <a
+                        href="#how"
+                        class="btn btn-ghost btn-xl"
+                    >
+                        See how it works
+                    </a>
+
                 </div>
-                <div class="med-card-mini">
-                    <div class="med-icon">A</div>
-                    <div>
-                        <div style="font-weight:700;font-size:13px">Amoxicillin 500mg</div>
-                        <div style="font-size:11px;color:var(--muted)">Twice daily • 5 days • After food</div>
+
+                <div
+                    style="
+                        margin-top:18px;
+                        display:flex;
+                        gap:18px;
+                        align-items:center;
+                        font-size:12px;
+                        color:var(--muted)
+                    "
+                >
+                    <span>✓ Simple to use</span>
+                    <span>✓ Private by design</span>
+                    <span>✓ Made with care</span>
+                </div>
+
+            </div>
+
+
+            <!-- HERO VISUAL -->
+
+            <div class="hero-visual" id="heroVisual">
+
+                <div class="blob" id="blob"></div>
+
+
+                <div class="glass-card card-main" id="cardMain">
+
+                    <div
+                        style="
+                            display:flex;
+                            justify-content:space-between;
+                            align-items:center;
+                            margin-bottom:14px
+                        "
+                    >
+
+                        <strong
+                            style="
+                                font-size:13px;
+                                letter-spacing:.06em;
+                                color:var(--green-800)
+                            "
+                        >
+                            YOUR COMPANION
+                        </strong>
+
+                        <span
+                            style="
+                                font-size:11px;
+                                background:var(--green-100);
+                                padding:4px 8px;
+                                border-radius:100px;
+                                color:var(--green-800)
+                            "
+                        >
+                            Listening • Caring
+                        </span>
+
                     </div>
+
+
+                    <div class="chat-bubble assistant">
+                        Hi Aarav, I understand you're worried about that
+                        fever. Let's take it step by step.
+                    </div>
+
+
+                    <div class="med-card-mini">
+
+                        <div class="med-icon">
+                            💊
+                        </div>
+
+                        <div>
+                            <div
+                                style="
+                                    font-weight:700;
+                                    font-size:13px
+                                "
+                            >
+                                Your medicines, explained simply
+                            </div>
+
+                            <div
+                                style="
+                                    font-size:11px;
+                                    color:var(--muted)
+                                "
+                            >
+                                Clear dosage, gentle reminders
+                            </div>
+                        </div>
+
+                    </div>
+
+
+                    <div class="chat-bubble user">
+                        Can you help me understand this rash?
+                    </div>
+
+
+                    <div
+                        class="chat-bubble assistant"
+                        style="font-size:12px"
+                    >
+                        Of course. I'll share what I see in general terms
+                        and when it's wise to see a doctor. You're not alone
+                        in this.
+                    </div>
+
                 </div>
-                <div class="chat-bubble user">What precautions for this rash image?</div>
-                <div class="chat-bubble assistant" style="font-size:12px">From image: mild contact dermatitis possible.
-                    Keep clean, avoid scratching, moisturize. See derm if spreading...
+
+
+                <div
+                    class="glass-card card-prescription"
+                    id="cardPres"
+                >
+
+                    <div
+                        style="
+                            font-size:12px;
+                            font-weight:700;
+                            color:var(--green-800)
+                        "
+                    >
+                        📄 Your medicines, made simple
+                    </div>
+
+                    <div
+                        style="
+                            margin-top:10px;
+                            background:white;
+                            border-radius:12px;
+                            padding:10px;
+                            font-size:11px;
+                            line-height:1.4
+                        "
+                    >
+                        Morning & evening
+                        <br>
+                        Take as directed • 3 days
+                        <br>
+
+                        <span style="color:var(--muted)">
+                            A little more clarity, one step at a time.
+                        </span>
+                    </div>
+
+                    <div
+                        style="
+                            margin-top:10px;
+                            display:flex;
+                            gap:8px
+                        "
+                    >
+                        <span
+                            style="
+                                background:var(--green-900);
+                                color:white;
+                                border-radius:100px;
+                                padding:6px 10px;
+                                font-size:10px;
+                                font-weight:700
+                            "
+                        >
+                            Set a gentle reminder
+                        </span>
+                    </div>
+
                 </div>
+
+
+                <div
+                    class="glass-card card-skin"
+                    id="cardSkin"
+                >
+
+                    <div
+                        style="
+                            font-size:12px;
+                            font-weight:700
+                        "
+                    >
+                        💚 Care, not just answers
+                    </div>
+
+                    <div
+                        style="
+                            margin-top:8px;
+                            width:100%;
+                            height:84px;
+                            border-radius:12px;
+                            background:
+                                linear-gradient(
+                                    135deg,
+                                    #e8f8f3,
+                                    #d1f2e8
+                                );
+                            display:grid;
+                            place-items:center;
+                            font-size:22px
+                        "
+                    >
+                        🩹
+                    </div>
+
+                    <div
+                        style="
+                            margin-top:8px;
+                            font-size:11px;
+                            color:var(--muted)
+                        "
+                    >
+                        General guidance only.
+                        Always kind, always cautious.
+                    </div>
+
+                </div>
+
             </div>
-            <div class="glass-card card-prescription" id="cardPres">
-                <div style="font-size:12px;font-weight:700;color:var(--green-800);display:flex;align-items:center;gap:6px">
-                    📄 Prescription • Parsed
-                </div>
-                <div style="margin-top:10px;background:white;border-radius:12px;padding:10px;font-size:11px;line-height:1.4;box-shadow:inset 0 1px 2px rgba(0,0,0,0.04)">
-                    Tab. Cetirizine 10mg<br>1-0-1 • 3 days<br><span style="color:var(--muted)">Take after food, avoid driving if drowsy</span>
-                </div>
-                <div style="margin-top:10px;display:flex;gap:8px"><span
-                        style="background:var(--green-900);color:white;border-radius:100px;padding:6px 10px;font-size:10px;font-weight:700">Add to Scheduler</span><span
-                        style="background:var(--green-100);color:var(--green-800);border-radius:100px;padding:6px 10px;font-size:10px">Verified in KB</span>
-                </div>
-            </div>
-            <div class="glass-card card-skin" id="cardSkin">
-                <div style="font-size:12px;font-weight:700">🔍 Skin Image • Analysis</div>
-                <div style="margin-top:8px;width:100%;height:84px;border-radius:12px;background:linear-gradient(135deg,#fde6e1,#f9d8d0);display:grid;place-items:center;font-size:22px">
-                    🩹
-                </div>
-                <div style="margin-top:8px;font-size:11px;color:var(--muted)">General info only. Not a diagnosis.
-                    Monitor for infection signs.
-                </div>
-            </div>
+
         </div>
-    </div>
-</section>
 
-<div class="marquee">
-    <div class="marquee-track">
-        <div class="marquee-item">● RAG DIRECTORY: knowledge_base/ PDFs + SUBDIRS</div>
-        <div class="marquee-item">● TEXT • IMAGE • VOICE • PDF • RAG</div>
-        <div class="marquee-item">● PRESCRIPTION PARSER</div>
-        <div class="marquee-item">● SKIN ANALYSIS</div>
-        <div class="marquee-item">● MEDICATION SCHEDULER + EMAIL</div>
-        <div class="marquee-item">● KNOWLEDGE-BASE VERIFIED + CITATIONS</div>
-        <div class="marquee-item">● SAFETY GUARDRAILS</div>
-        <div class="marquee-item">● 11 LANGUAGES</div>
-        <div class="marquee-item">● CHROMADB • RAG • FLASK • GEMINI 1.5 FLASH • WHISPER</div>
-        <div class="marquee-item">● RAG DIRECTORY: knowledge_base/ PDFs + SUBDIRS</div>
-        <div class="marquee-item">● TEXT • IMAGE • VOICE • PDF • RAG</div>
-        <div class="marquee-item">● PRESCRIPTION PARSER</div>
-        <div class="marquee-item">● SKIN ANALYSIS</div>
-        <div class="marquee-item">● MEDICATION SCHEDULER + EMAIL</div>
-        <div class="marquee-item">● KNOWLEDGE-BASE VERIFIED + CITATIONS</div>
-        <div class="marquee-item">● SAFETY GUARDRAILS</div>
-    </div>
-</div>
+    </section>
 
-<section class="section" id="features">
-    <div class="section-inner">
-        <div class="kicker" id="featKicker">Built like August AI — but yours</div>
-        <h2 class="section-title" id="featTitle">Multimodal intake, <br>verified answers, <br><span
-                style="color:var(--green-600);font-style:italic;font-weight:500">gentle care.</span></h2>
-        <p class="section-desc" id="featDesc">Type, speak in any language, or upload a prescription or skin photo. Care
-            Companion checks every answer against its ChromaDB knowledge base before using Gemini — so it never
-            hallucinates.</p>
 
-        <div class="features">
-            <div class="feature feat-span-7" id="f1">
-                <div class="feature-icon">📚</div>
-                <h3>RAG over PDF Directory (NEW)</h3>
-                <p><b>Directory:</b> <span
-                        style="font-family:monospace;background:#e8f8f3;padding:2px 6px;border-radius:6px">knowledge_base/</span>
-                    reads whole directory + subdirectories. Add PDFs, TXT, MD anywhere. Auto-chunked 1000 chars / 150
-                    overlap with source + page metadata. Retrieved via ChromaDB, citations like (Source:
-                    fever_management.pdf p.1). LLM generates grounded answer using RAG.</p>
-                <div style="margin-top:16px;display:flex;gap:8px;flex-wrap:wrap">
-                    <span style="background:#fef9e7;border:1px solid #fde68a;padding:6px 10px;border-radius:100px;font-size:11px">📁 Recursive Scan</span><span
-                        style="background:var(--green-50);border:1px solid var(--green-100);padding:6px 10px;border-radius:100px;font-size:11px">Chunk 1000/150</span><span
-                        style="background:#f0f9ff;padding:6px 10px;border-radius:100px;font-size:11px;border:1px solid #bae6fd">Citations</span><span
-                        style="background:#fff8e1;border:1px solid #ffe082;padding:6px 10px;border-radius:100px;font-size:11px">RAG Grounded</span>
-                </div>
+    <!-- =========================================
+         MARQUEE
+    ========================================= -->
+
+    <div class="marquee">
+
+        <div class="marquee-track">
+
+            <div class="marquee-item">
+                ● Your health, understood
             </div>
-            <div class="feature feat-span-5" id="f2">
-                <div class="feature-icon">💬</div>
-                <h3>Text + RAG Verification</h3>
-                <p>Every answer first searches RAG directory (ChromaDB). Retrieves top 5 relevant chunks with source
-                    citations. If relevant, Gemini uses ONLY those chunks. If not, fallback to general safe info.
-                    Prevents hallucination.</p>
-                <div style="margin-top:16px;display:flex;gap:8px;flex-wrap:wrap">
-                    <span style="background:var(--green-50);border:1px solid var(--green-100);padding:6px 10px;border-radius:100px;font-size:11px">SQLite Auth</span><span
-                        style="background:#fef9e7;border:1px solid #fde68a;padding:6px 10px;border-radius:100px;font-size:11px">ChromaDB RAG</span><span
-                        style="background:#f0f9ff;padding:6px 10px;border-radius:100px;font-size:11px;border:1px solid #bae6fd">Gemini Vision</span>
-                </div>
+
+            <div class="marquee-item">
+                ● Prescriptions made simple
             </div>
-            <div class="feature feat-span-5" id="f2b">
-                <div class="feature-icon">🎤</div>
-                <h3>Voice in your language</h3>
-                <p>Faster Whisper Large-v3 transcribes your voice. Responds in the language you picked in profile —
-                    Hindi, Marathi, Spanish, Tamil, Telugu & 6 more. RAG still used for voice queries.</p>
+
+            <div class="marquee-item">
+                ● Gentle reminders that care
             </div>
-            <div class="feature feat-span-5" id="f3">
-                <div class="feature-icon">📸</div>
-                <h3>Prescription Parser</h3>
-                <p>Upload image or PDF. Extracts Medicine name, Dosage, Frequency, Duration, Route, Instructions + auto
-                    precaution. Then one-click add to scheduler with email reminders.</p>
+
+            <div class="marquee-item">
+                ● Speak in your language
             </div>
-            <div class="feature feat-span-7" id="f4">
-                <div class="feature-icon">🩺</div>
-                <h3>Skin & wound assist</h3>
-                <p>Upload cut, rash, acne, burn. Gives general observation, possible similar conditions
-                    (non-definitive), self-care, red flags for doctor visit. August AI style guardrails baked in.</p>
-                <div style="margin-top:12px;background:var(--green-900);color:#a7f3d0;border-radius:12px;padding:10px 12px;font-size:11px">
-                    ⚠️ This is general information only, not a diagnosis. Encourages seeing dermatologist.
-                </div>
+
+            <div class="marquee-item">
+                ● Private & secure
             </div>
-            <div class="feature feat-span-4" id="f5">
-                <div class="feature-icon">⏰</div>
-                <h3>Medication Scheduler</h3>
-                <p>Each medicine card has "Add to Scheduler". Pick times based on frequency (1/day = 1 timestamp etc).
-                    Emails you the card with precautions & safety guardrails.</p>
+
+            <div class="marquee-item">
+                ● Always here to listen
             </div>
-            <div class="feature feat-span-4" id="f6">
-                <div class="feature-icon">🌐</div>
-                <h3>11 Languages</h3>
-                <p>English, Hindi, Marathi, Tamil, Telugu, Bengali, Gujarati, Spanish, French, German + more. UI +
-                    responses adapt.</p>
+
+            <div class="marquee-item">
+                ● Your health, understood
             </div>
-            <div class="feature feat-span-4" id="f7">
-                <div class="feature-icon">🛡️</div>
-                <h3>Safety Guardrails</h3>
-                <p>Emergency detection (chest pain, breathing difficulty, suicidal thoughts), no definitive diagnosis,
-                    no prescription of new drugs, always disclaimer, encourage professional care.</p>
+
+            <div class="marquee-item">
+                ● Prescriptions made simple
             </div>
+
+            <div class="marquee-item">
+                ● Gentle reminders that care
+            </div>
+
+            <div class="marquee-item">
+                ● Speak in your language
+            </div>
+
+            <div class="marquee-item">
+                ● Private & secure
+            </div>
+
+            <div class="marquee-item">
+                ● Always here to listen
+            </div>
+
         </div>
-    </div>
-</section>
 
-<section class="section" id="how">
-    <div class="section-inner">
-        <div class="kicker">Flow</div>
-        <h2 class="section-title">From curiosity to clarity <br>in 4 calm steps.</h2>
-        <div class="how" id="howTrack">
-            <div class="step">
-                <div class="step-num">01</div>
-                <h4>Create profile & accept disclaimer</h4>
-                <p>First time only: see disclaimer, terms, privacy. Add age, weight, height, contacts, preferred
-                    language, health conditions, allergies.</p></div>
-            <div class="step">
-                <div class="step-num">02</div>
-                <h4>Ask however you want</h4>
-                <p>Type, upload prescription image/PDF, upload skin photo, or hold mic to speak in your language. We
-                    store chat in SQLite.</p></div>
-            <div class="step">
-                <div class="step-num">03</div>
-                <h4>Verified answer generation</h4>
-                <p>ChromaDB searched → if relevant, used. Else Gemini 1.5 Flash (your 3.6 key) answers in simple
-                    non-hallucinated language + guardrails.</p></div>
-            <div class="step">
-                <div class="step-num">04</div>
-                <h4>Act safely</h4>
-                <p>Medicine cards → add to scheduler → pick timestamps → email notification with card + precautions.
-                    Always see doctor for personal decisions.</p></div>
+    </div>
+
+
+    <!-- =========================================
+         FEATURES
+    ========================================= -->
+
+    <section class="section" id="features">
+
+        <div class="section-inner">
+
+            <div class="kicker" id="featKicker">
+                Care that feels human
+            </div>
+
+            <h2 class="section-title" id="featTitle">
+                A companion for
+                <br>
+                <span
+                    style="
+                        color:var(--green-600);
+                        font-style:italic;
+                        font-weight:500
+                    "
+                >
+                    every moment
+                </span>
+                of your health
+            </h2>
+
+            <p class="section-desc" id="featDesc">
+                From everyday questions to moments of worry,
+                Care Companion helps you feel calmer, more informed,
+                and supported — one gentle step at a time.
+            </p>
+
+
+            <div class="features">
+
+                <div class="feature feat-span-7" id="f1">
+
+                    <div class="feature-icon">💬</div>
+
+                    <h3>
+                        Ask however you feel comfortable
+                    </h3>
+
+                    <p>
+                        Ask naturally, share what is on your mind,
+                        and get calm guidance that feels easy to understand —
+                        without complicated medical language.
+                    </p>
+
+                </div>
+
+
+                <div class="feature feat-span-5" id="f2">
+
+                    <div class="feature-icon">🌙</div>
+
+                    <h3>
+                        Here at 2 AM, too
+                    </h3>
+
+                    <p>
+                        Health worries don't follow office hours.
+                        Whether it's early morning or late night,
+                        your companion is awake, ready to listen and
+                        help you feel a little less alone.
+                    </p>
+
+                </div>
+
+
+                <div class="feature feat-span-5" id="f3">
+
+                    <div class="feature-icon">📄</div>
+
+                    <h3>
+                        Prescriptions finally make sense
+                    </h3>
+
+                    <p>
+                        No more puzzling instructions.
+                        Get your medicines explained in simple words,
+                        with clear guidance about when and how to take them.
+                    </p>
+
+                </div>
+
+
+                <div class="feature feat-span-7" id="f4">
+
+                    <div class="feature-icon">🤲</div>
+
+                    <h3>
+                        Skin concerns with care, not fear
+                    </h3>
+
+                    <p>
+                        Share a photo of a cut, rash, or irritation.
+                        We share what we see in general terms,
+                        how to care for it at home, and when it's wise
+                        to visit a doctor.
+                    </p>
+
+                    <div
+                        style="
+                            margin-top:12px;
+                            background:var(--green-50);
+                            color:var(--green-800);
+                            border-radius:12px;
+                            padding:10px 12px;
+                            font-size:11px
+                        "
+                    >
+                        Our guidance is educational and caring,
+                        not a diagnosis. We encourage seeing a doctor
+                        for personal concerns.
+                    </div>
+
+                </div>
+
+
+                <div class="feature feat-span-4" id="f5">
+
+                    <div class="feature-icon">⏰</div>
+
+                    <h3>
+                        Gentle reminders that care
+                    </h3>
+
+                    <p>
+                        Choose when you want to be reminded,
+                        and let gentle prompts help you stay on track —
+                        like a caring family member, not a noisy alarm.
+                    </p>
+
+                </div>
+
+
+                <div class="feature feat-span-4" id="f6">
+
+                    <div class="feature-icon">🌍</div>
+
+                    <h3>
+                        Speaks your language
+                    </h3>
+
+                    <p>
+                        Connect in the language that feels most natural
+                        to you. Because care feels better when it feels familiar.
+                    </p>
+
+                </div>
+
+
+                <div class="feature feat-span-4" id="f7">
+
+                    <div class="feature-icon">🔒</div>
+
+                    <h3>
+                        Private, secure, yours
+                    </h3>
+
+                    <p>
+                        Your health journey is personal.
+                        We keep the experience private, respectful,
+                        and centered around you.
+                    </p>
+
+                </div>
+
+            </div>
+
         </div>
-    </div>
-</section>
 
-<section class="safety" id="safety">
-    <div class="safety-inner">
-        <div>
-            <div class="kicker" style="color:var(--green-300)">Safety like August AI</div>
-            <h2>We are careful so<br>you can be confident.</h2>
-            <p>Care Companion is an information companion, not a replacement for doctors. Modeled on August AI's
-                responsible health AI principles.</p>
-            <div class="safety-list">
-                <div class="safety-item"><span>✓</span>
-                    <div><strong style="color:white">No definitive diagnosis</strong>
-                        <div style="font-size:13px;color:#8abfb0">Uses "may be consistent with" language, encourages
-                            clinician confirmation.
+    </section>
+
+
+    <!-- =========================================
+         QUOTES
+    ========================================= -->
+
+    <section class="section quotes" id="quotes">
+
+        <div class="section-inner">
+
+            <div class="kicker">
+                Words that heal
+            </div>
+
+            <h2 class="section-title">
+                You are not alone
+                <br>
+                in your health journey
+            </h2>
+
+            <p class="section-desc">
+                Sometimes we all need a gentle reminder that small steps
+                matter, and that caring for yourself is an act of courage.
+            </p>
+
+
+            <div class="quotes-grid">
+
+                <div class="quote-card" id="q1">
+
+                    <div class="quote-text">
+                        The greatest wealth is health.
+                        It is not just about the body,
+                        but about having someone who listens
+                        when you are worried.
+                    </div>
+
+                    <div class="quote-author">
+                        <div class="quote-avatar">V</div>
+
+                        <div>
+                            <b>Virgil</b>
+                            <span>Ancient wisdom, still true today</span>
                         </div>
                     </div>
+
                 </div>
-                <div class="safety-item"><span>✓</span>
-                    <div><strong style="color:white">Emergency redirection</strong>
-                        <div style="font-size:13px;color:#8abfb0">Chest pain, breathing difficulty, suicidal ideation →
-                            immediate emergency guidance, not chat.
+
+
+                <div class="quote-card" id="q2">
+
+                    <div class="quote-text">
+                        To keep the body in good health
+                        is a duty, otherwise we shall not be
+                        able to keep our mind strong and clear.
+                    </div>
+
+                    <div class="quote-author">
+                        <div class="quote-avatar">B</div>
+
+                        <div>
+                            <b>Buddha</b>
+                            <span>A gentle path to well-being</span>
                         </div>
                     </div>
+
                 </div>
-                <div class="safety-item"><span>✓</span>
-                    <div><strong style="color:white">Medication safety</strong>
-                        <div style="font-size:13px;color:#8abfb0">No new prescriptions. Only parses yours. Adds
-                            precautions, expiry checks, allergy reminders from profile.
+
+
+                <div class="quote-card" id="q3">
+
+                    <div class="quote-text">
+                        Health is not about the weight you lose,
+                        but about the life you gain.
+                        Every small step you take matters so much.
+                    </div>
+
+                    <div class="quote-author">
+                        <div class="quote-avatar">A</div>
+
+                        <div>
+                            <b>Care Companion Family</b>
+                            <span>From our community</span>
                         </div>
                     </div>
+
                 </div>
-            </div>
-        </div>
-        <div>
-            <div style="background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.1);border-radius:20px;padding:20px">
-                <div style="color:#5ee9b5;font-size:12px;font-weight:700;letter-spacing:0.08em">DISCLAIMER PREVIEW
-                    (first-time profile)
+
+
+                <div class="quote-card" id="q4">
+
+                    <div class="quote-text">
+                        I was scared to even ask about my symptoms
+                        at night. Care Companion listened patiently
+                        at 2 AM and explained everything so simply.
+                        I felt seen.
+                    </div>
+
+                    <div class="quote-author">
+                        <div class="quote-avatar">P</div>
+
+                        <div>
+                            <b>Priya, 28</b>
+                            <span>Mumbai • Health journey</span>
+                        </div>
+                    </div>
+
                 </div>
-                <div style="margin-top:14px;color:white;line-height:1.6;font-size:14px">
-                    Care Companion provides general health information for educational purposes only and does NOT
-                    provide medical advice, diagnosis, or treatment. Always seek a qualified healthcare provider with
-                    questions. In emergency call 112. Information is knowledge-base verified but may be incomplete. By
-                    continuing you accept Terms & Privacy.
+
+
+                <div class="quote-card" id="q5">
+
+                    <div class="quote-text">
+                        My mother's prescriptions were so confusing.
+                        Now I just upload a photo and it explains
+                        in Hindi. She finally understands when to take what.
+                    </div>
+
+                    <div class="quote-author">
+                        <div class="quote-avatar">A</div>
+
+                        <div>
+                            <b>Aarav, 34</b>
+                            <span>Pune • Caring for parents</span>
+                        </div>
+                    </div>
+
                 </div>
-                <div style="margin-top:16px;display:flex;gap:10px"><span
-                        style="background:white;color:var(--green-900);padding:8px 14px;border-radius:100px;font-size:12px;font-weight:700">Accept & Continue</span><span
-                        style="border:1px solid rgba(255,255,255,0.2);padding:8px 14px;border-radius:100px;font-size:12px">Read Terms</span>
+
+
+                <div class="quote-card" id="q6">
+
+                    <div class="quote-text">
+                        Good health is not the absence of worry,
+                        but having a companion who helps you understand
+                        and take one gentle step at a time.
+                    </div>
+
+                    <div class="quote-author">
+                        <div class="quote-avatar">C</div>
+
+                        <div>
+                            <b>Care Companion</b>
+                            <span>Our promise to you</span>
+                        </div>
+                    </div>
+
                 </div>
+
             </div>
-            <div style="margin-top:18px;background:linear-gradient(135deg,#0f5d44,#16a085);border-radius:20px;padding:20px;color:white">
-                <div style="font-size:13px;opacity:0.9">Profile includes</div>
-                <div style="margin-top:8px;display:flex;flex-wrap:wrap;gap:8px"><span
-                        style="background:rgba(255,255,255,0.15);padding:6px 10px;border-radius:100px;font-size:11px">Name • Age • Weight • Height</span><span
-                        style="background:rgba(255,255,255,0.15);padding:6px 10px;border-radius:100px;font-size:11px">Email • Contact • Emergency Contact</span><span
-                        style="background:rgba(255,255,255,0.15);padding:6px 10px;border-radius:100px;font-size:11px">Preferred Language</span><span
-                        style="background:rgba(255,255,255,0.15);padding:6px 10px;border-radius:100px;font-size:11px">Health Conditions</span><span
-                        style="background:rgba(255,255,255,0.15);padding:6px 10px;border-radius:100px;font-size:11px">Allergies</span>
+
+        </div>
+
+    </section>
+
+
+    <!-- =========================================
+         HOW IT WORKS
+    ========================================= -->
+
+    <section class="section" id="how">
+
+        <div class="section-inner">
+
+            <div class="kicker">
+                A calm journey
+            </div>
+
+            <h2 class="section-title">
+                From worry to clarity,
+                <br>
+                in gentle steps
+            </h2>
+
+
+            <div class="how" id="howTrack">
+
+                <div class="step">
+                    <div class="step-num">01</div>
+                    <h4>Tell us about you, privately</h4>
+                    <p>
+                        Start with a simple introduction so your
+                        companion can make the experience feel more
+                        personal and comfortable.
+                    </p>
                 </div>
+
+
+                <div class="step">
+                    <div class="step-num">02</div>
+                    <h4>Ask in any way you like</h4>
+                    <p>
+                        Write a question, speak in your language,
+                        or upload a photo of a prescription or skin concern.
+                        Your companion listens without judgment.
+                    </p>
+                </div>
+
+
+                <div class="step">
+                    <div class="step-num">03</div>
+                    <h4>Get clear, caring guidance</h4>
+                    <p>
+                        We explain in simple words, not medical jargon.
+                        With general precautions, when to seek help,
+                        and always with kindness and caution.
+                    </p>
+                </div>
+
+
+                <div class="step">
+                    <div class="step-num">04</div>
+                    <h4>Stay gently on track</h4>
+                    <p>
+                        Choose your reminder times and let gentle prompts
+                        help you remember what matters — like a family
+                        member caring for you.
+                    </p>
+                </div>
+
             </div>
-        </div>
-    </div>
-</section>
 
-<footer class="footer">
-    <div class="foot-inner">
-        <div>
-            <div class="logo">
-                <div class="logo-mark">C</div>
-                <div class="logo-text">Care <span>Companion</span></div>
+        </div>
+
+    </section>
+
+
+    <!-- =========================================
+         SAFETY
+    ========================================= -->
+
+    <section class="safety" id="safety">
+
+        <div class="safety-inner">
+
+            <div>
+
+                <div
+                    class="kicker"
+                    style="color:var(--green-300)"
+                >
+                    Our promise
+                </div>
+
+                <h2>
+                    We are careful so
+                    <br>
+                    you can feel safe.
+                </h2>
+
+                <p>
+                    Care Companion is a caring information companion,
+                    not a replacement for doctors. It is built with the
+                    principle that being safe is more important than being fast.
+                </p>
+
+
+                <div class="safety-list">
+
+                    <div class="safety-item">
+
+                        <span>🤍</span>
+
+                        <div>
+                            <strong style="color:white">
+                                No scary diagnosis
+                            </strong>
+
+                            <div
+                                style="
+                                    font-size:13px;
+                                    color:#8abfb0
+                                "
+                            >
+                                We never say you definitely have something.
+                                We share general information and encourage
+                                you to see a doctor for personal advice.
+                            </div>
+                        </div>
+
+                    </div>
+
+
+                    <div class="safety-item">
+
+                        <span>🚨</span>
+
+                        <div>
+                            <strong style="color:white">
+                                Emergencies heard immediately
+                            </strong>
+
+                            <div
+                                style="
+                                    font-size:13px;
+                                    color:#8abfb0
+                                "
+                            >
+                                If you mention serious symptoms,
+                                we immediately guide you toward
+                                appropriate emergency help.
+                            </div>
+                        </div>
+
+                    </div>
+
+
+                    <div class="safety-item">
+
+                        <span>💊</span>
+
+                        <div>
+                            <strong style="color:white">
+                                Medicines handled with care
+                            </strong>
+
+                            <div
+                                style="
+                                    font-size:13px;
+                                    color:#8abfb0
+                                "
+                            >
+                                We don't create new prescriptions.
+                                We help you understand the ones your
+                                doctor has already given you.
+                            </div>
+                        </div>
+
+                    </div>
+
+                </div>
+
             </div>
-            <div style="margin-top:10px;font-size:13px;color:var(--muted);max-width:320px">Multimodal, multilingual
-                healthcare companion. Flask • SQLite • ChromaDB • Gemini 1.5 Flash • Faster Whisper. Built for learning
-                purpose with safety first.
+
+
+            <div>
+
+                <div
+                    style="
+                        background:rgba(255,255,255,0.06);
+                        border:1px solid rgba(255,255,255,0.1);
+                        border-radius:20px;
+                        padding:20px
+                    "
+                >
+
+                    <div
+                        style="
+                            color:#5ee9b5;
+                            font-size:12px;
+                            font-weight:700;
+                            letter-spacing:.08em
+                        "
+                    >
+                        A NOTE FROM OUR HEART
+                    </div>
+
+                    <div
+                        style="
+                            margin-top:14px;
+                            color:white;
+                            line-height:1.6;
+                            font-size:15px;
+                            font-family:'Fraunces';
+                            font-style:italic
+                        "
+                    >
+                        "You deserve health information that is clear,
+                        kind, and private. Information that doesn't scare you,
+                        but helps you take one gentle step at a time.
+                        That is what we try to be — a small companion in your pocket,
+                        always here to listen."
+                    </div>
+
+                    <div
+                        style="
+                            margin-top:16px;
+                            display:flex;
+                            gap:10px
+                        "
+                    >
+                        <a href="/register" class="soft-cta">
+                            Start with care →
+                        </a>
+                    </div>
+
+                </div>
+
+
+                <div
+                    style="
+                        margin-top:18px;
+                        background:
+                            linear-gradient(
+                                135deg,
+                                #0f5d44,
+                                #16a085
+                            );
+                        border-radius:20px;
+                        padding:20px;
+                        color:white
+                    "
+                >
+
+                    <div
+                        style="
+                            font-size:13px;
+                            opacity:.9
+                        "
+                    >
+                        Quotes that guide us
+                    </div>
+
+                    <div
+                        style="
+                            margin-top:12px;
+                            font-family:'Fraunces';
+                            font-size:15px;
+                            line-height:1.5;
+                            font-style:italic
+                        "
+                    >
+                        "The art of medicine consists of amusing
+                        the patient while nature cures the disease."
+                        — Voltaire
+
+                        <br><br>
+
+                        "Health is a state of complete physical,
+                        mental and social well-being."
+                        — WHO
+                    </div>
+
+                </div>
+
             </div>
+
         </div>
-        <div style="font-size:13px;color:var(--muted)">
-            <div style="font-weight:700;color:var(--ink);margin-bottom:8px">Tech Stack</div>
-            Frontend: Flask + Vanilla JS + GSAP<br>Vector: ChromaDB + MiniLM<br>LLM: Gemini 1.5 Flash (stand-in for 3.6)<br>Voice:
-            Faster Whisper Large-v3<br>UI: Shades of green, professional
+
+    </section>
+
+
+    <!-- =========================================
+         FOOTER
+    ========================================= -->
+
+    <footer class="footer">
+
+        <div class="foot-inner">
+
+            <div>
+
+                <div class="logo">
+                    <div class="logo-mark">C</div>
+
+                    <div class="logo-text">
+                        Care <span>Companion</span>
+                    </div>
+                </div>
+
+                <div
+                    style="
+                        margin-top:10px;
+                        font-size:13px;
+                        color:var(--muted);
+                        max-width:320px
+                    "
+                >
+                    A gentle companion for your health journey.
+                    Private, secure, and always here to listen —
+                    not to diagnose, but to care and explain clearly.
+                </div>
+
+                <div
+                    style="
+                        margin-top:16px;
+                        display:flex;
+                        gap:18px;
+                        font-size:12px;
+                        color:var(--muted)
+                    "
+                >
+                    <span>✓ Private by design</span>
+                    <span>✓ Made with care in India</span>
+                </div>
+
+            </div>
+
+
+            <div
+                style="
+                    font-size:13px;
+                    color:var(--muted);
+                    max-width:280px
+                "
+            >
+
+                <div
+                    style="
+                        font-weight:700;
+                        color:var(--ink);
+                        margin-bottom:8px
+                    "
+                >
+                    Our values
+                </div>
+
+                Kindness over speed
+                <br>
+                Clarity over jargon
+                <br>
+                Privacy over everything
+                <br>
+                Safety over everything else
+
+            </div>
+
+
+            <div style="font-size:13px">
+
+                <a
+                    href="/register"
+                    class="btn btn-primary"
+                >
+                    Begin your journey
+                </a>
+
+                <div
+                    style="
+                        margin-top:12px;
+                        color:var(--muted);
+                        font-size:11px
+                    "
+                >
+                    © 2026 Care Companion
+                    <br>
+                    Gentle health information for everyday support
+                </div>
+
+            </div>
+
         </div>
-        <div style="font-size:13px"><a href="/register" class="btn btn-primary">Get Started</a>
-            <div style="margin-top:12px;color:var(--muted)">© 2026 Care Companion<br>Not medical advice</div>
-        </div>
-    </div>
-</footer>
 
-<script>
-    // Cursor follower
-    const dot = document.getElementById('cursorDot'), ring = document.getElementById('cursorRing');
-    let mx = 0, my = 0, rx = 0, ry = 0;
-    window.addEventListener('mousemove', e => {
-        mx = e.clientX;
-        my = e.clientY;
-        dot.style.transform = `translate(${mx - 4}px,${my - 4}px)`;
-    });
-    (function animateRing() {
-        rx += (mx - rx) * 0.12;
-        ry += (my - ry) * 0.12;
-        ring.style.transform = `translate(${rx - 20}px,${ry - 20}px)`;
-        requestAnimationFrame(animateRing);
-    })();
+    </footer>
 
-    // Particle canvas
-    const canvas = document.getElementById('bg-canvas'), ctx = canvas.getContext('2d');
 
-    function resize() {
-        canvas.width = window.innerWidth;
-        canvas.height = window.innerHeight
-    }
+    <!-- =========================================
+         JAVASCRIPT
+    ========================================= -->
 
-    resize();
-    window.addEventListener('resize', resize);
-    const particles = [];
-    for (let i = 0; i < 60; i++) particles.push({
-        x: Math.random() * canvas.width,
-        y: Math.random() * canvas.height,
-        r: Math.random() * 3 + 0.5,
-        vx: (Math.random() - 0.5) * 0.4,
-        vy: (Math.random() - 0.5) * 0.4,
-        a: Math.random() * 0.4 + 0.1
-    });
+    <script>
 
-    function draw() {
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
-        particles.forEach(p => {
-            p.x += p.vx;
-            p.y += p.vy;
-            if (p.x < 0 || p.x > canvas.width) p.vx *= -1;
-            if (p.y < 0 || p.y > canvas.height) p.vy *= -1;
-            ctx.beginPath();
-            ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
-            ctx.fillStyle = `rgba(10,61,46,${p.a})`;
-            ctx.fill();
-            // connections
-            particles.forEach(o => {
-                const dx = p.x - o.x, dy = p.y - o.y, d = Math.hypot(dx, dy);
-                if (d < 120) {
-                    ctx.strokeStyle = `rgba(22,160,133,${0.08 * (1 - d / 120)})`;
-                    ctx.lineWidth = 0.6;
-                    ctx.beginPath();
-                    ctx.moveTo(p.x, p.y);
-                    ctx.lineTo(o.x, o.y);
-                    ctx.stroke();
-                }
-            });
-        });
-        requestAnimationFrame(draw);
-    }
+        /* =========================================
+           DEVICE FLAGS
+        ========================================= */
 
-    draw();
+        const isTouch =
+            window.matchMedia('(pointer: coarse)').matches;
 
-    // GSAP Animations
-    gsap.registerPlugin(ScrollTrigger);
-    gsap.from("#nav", {y: -80, opacity: 0, duration: 1, ease: "power4.out"});
-    gsap.from("#heroTitle", {y: 80, opacity: 0, duration: 1.2, delay: 0.2, ease: "power4.out"});
-    gsap.from("#heroDesc", {y: 40, opacity: 0, duration: 0.9, delay: 0.4, ease: "power3.out"});
-    gsap.from("#heroActions", {y: 30, opacity: 0, duration: 0.8, delay: 0.5});
-    gsap.from("#heroVisual", {y: 60, scale: 0.96, opacity: 0, duration: 1.2, delay: 0.3, ease: "power4.out"});
+        const isSmall =
+            window.matchMedia('(max-width: 900px)').matches;
 
-    // floating cards
-    gsap.to("#cardMain", {y: -10, duration: 2.5, yoyo: true, repeat: -1, ease: "sine.inOut"});
-    gsap.to("#cardPres", {y: -14, rotation: -2, duration: 3, yoyo: true, repeat: -1, ease: "sine.inOut", delay: 0.3});
-    gsap.to("#cardSkin", {y: -12, rotation: 3, duration: 2.8, yoyo: true, repeat: -1, ease: "sine.inOut", delay: 0.6});
-    gsap.to("#blob", {scale: 1.05, duration: 4, yoyo: true, repeat: -1, ease: "sine.inOut"});
-
-    // scroll triggers
-    gsap.from("#featKicker", {
-        scrollTrigger: {trigger: "#features", start: "top 80%"},
-        y: 20,
-        opacity: 0,
-        duration: 0.6
-    });
-    gsap.from("#featTitle", {
-        scrollTrigger: {trigger: "#features", start: "top 75%"},
-        y: 50,
-        opacity: 0,
-        duration: 0.8
-    });
-    gsap.from("#featDesc", {
-        scrollTrigger: {trigger: "#features", start: "top 70%"},
-        y: 30,
-        opacity: 0,
-        duration: 0.8,
-        delay: 0.2
-    });
-    gsap.utils.toArray(".feature").forEach((el, i) => {
-        gsap.from(el, {
-            scrollTrigger: {trigger: el, start: "top 85%"},
-            y: 60,
-            opacity: 0,
-            duration: 0.8,
-            delay: i * 0.05,
-            ease: "power3.out"
-        });
-    });
-    gsap.from(".how .step", {
-        scrollTrigger: {trigger: "#how", start: "top 75%"},
-        x: 80,
-        opacity: 0,
-        duration: 0.8,
-        stagger: 0.12
-    });
-    gsap.from(".safety", {
-        scrollTrigger: {trigger: ".safety", start: "top 80%"},
-        y: 80,
-        opacity: 0,
-        scale: 0.98,
-        duration: 1,
-        ease: "power4.out"
-    });
-
-    // nav blur on scroll
-    ScrollTrigger.create({
-        start: "top -80", end: 99999, onUpdate: self => {
-            document.getElementById('nav').style.background = self.progress > 0 ? 'rgba(255,255,255,0.86)' : 'rgba(255,255,255,0.72)';
+        if (isTouch) {
+            document.body.classList.add('touch-device');
         }
-    });
-</script>
-<script>(function () {
-    function c() {
-        var b = a.contentDocument || (a.contentWindow && a.contentWindow.document);
-        if (b) {
-            var d = b.createElement('script');
-            d.innerHTML = "window.__CF$cv$params={r:'a2365c39ab89f4b7',t:'MTc4NTQzNTQ0Nw=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";
-            b.getElementsByTagName('head')[0].appendChild(d)
-        }
-    }
 
-    if (document.body) {
-        var a = document.createElement('iframe');
-        a.height = 1;
-        a.width = 1;
-        a.style.position = 'absolute';
-        a.style.top = 0;
-        a.style.left = 0;
-        a.style.border = 'none';
-        a.style.visibility = 'hidden';
-        document.body.appendChild(a);
-        if ('loading' !== document.readyState) c(); else if (window.addEventListener) document.addEventListener('DOMContentLoaded', c); else {
-            var e = document.onreadystatechange || function () {
-            };
-            document.onreadystatechange = function (b) {
-                e(b);
-                'loading' !== document.readyState && (document.onreadystatechange = e, c())
+
+        /* =========================================
+           UNIQUE CARE PULSE CURSOR
+        ========================================= */
+
+        if (!isTouch) {
+
+            const cursor =
+                document.getElementById('careCursor');
+
+            const trail =
+                document.getElementById('cursorTrail');
+
+            let mouseX = window.innerWidth / 2;
+            let mouseY = window.innerHeight / 2;
+
+            let cursorX = mouseX;
+            let cursorY = mouseY;
+
+            let trailX = mouseX;
+            let trailY = mouseY;
+
+            let lastX = mouseX;
+            let lastY = mouseY;
+
+            let movingTimeout;
+
+
+            function animateCursor() {
+
+                cursorX +=
+                    (mouseX - cursorX) * 0.18;
+
+                cursorY +=
+                    (mouseY - cursorY) * 0.18;
+
+                trailX +=
+                    (mouseX - trailX) * 0.08;
+
+                trailY +=
+                    (mouseY - trailY) * 0.08;
+
+
+                cursor.style.transform =
+                    `translate3d(
+                        ${cursorX - 23}px,
+                        ${cursorY - 23}px,
+                        0
+                    )`;
+
+
+                trail.style.transform =
+                    `translate3d(
+                        ${trailX - 4}px,
+                        ${trailY - 4}px,
+                        0
+                    )`;
+
+
+                requestAnimationFrame(
+                    animateCursor
+                );
+
             }
+
+
+            animateCursor();
+
+
+            window.addEventListener(
+                'mousemove',
+                event => {
+
+                    mouseX = event.clientX;
+                    mouseY = event.clientY;
+
+
+                    const distance =
+                        Math.hypot(
+                            mouseX - lastX,
+                            mouseY - lastY
+                        );
+
+
+                    if (distance > 2) {
+
+                        cursor.classList.add(
+                            'is-moving'
+                        );
+
+                        clearTimeout(
+                            movingTimeout
+                        );
+
+
+                        movingTimeout =
+                            setTimeout(() => {
+
+                                cursor.classList.remove(
+                                    'is-moving'
+                                );
+
+                            }, 120);
+
+
+                        lastX = mouseX;
+                        lastY = mouseY;
+
+                    }
+
+                }
+            );
+
+
+            /* Interactive elements */
+
+            const interactiveElements =
+                document.querySelectorAll(
+                    'a, button, .btn, .feature, .quote-card, .step, .glass-card, .soft-cta'
+                );
+
+
+            interactiveElements.forEach(
+                element => {
+
+                    element.addEventListener(
+                        'mouseenter',
+                        () => {
+
+                            document.body.classList.add(
+                                'cursor-hover'
+                            );
+
+                        }
+                    );
+
+
+                    element.addEventListener(
+                        'mouseleave',
+                        () => {
+
+                            document.body.classList.remove(
+                                'cursor-hover'
+                            );
+
+                        }
+                    );
+
+                }
+            );
+
+
+            /* Click effect */
+
+            window.addEventListener(
+                'mousedown',
+                () => {
+
+                    document.body.classList.add(
+                        'cursor-click'
+                    );
+
+                }
+            );
+
+
+            window.addEventListener(
+                'mouseup',
+                () => {
+
+                    setTimeout(() => {
+
+                        document.body.classList.remove(
+                            'cursor-click'
+                        );
+
+                    }, 120);
+
+                }
+            );
+
         }
-    }
-})();</script>
+
+
+        /* =========================================
+           BACKGROUND PARTICLES
+        ========================================= */
+
+        const canvas =
+            document.getElementById('bg-canvas');
+
+        const ctx =
+            canvas.getContext('2d');
+
+
+        function resizeCanvas() {
+
+            const ratio =
+                window.devicePixelRatio || 1;
+
+            canvas.width =
+                window.innerWidth * ratio;
+
+            canvas.height =
+                window.innerHeight * ratio;
+
+            canvas.style.width =
+                window.innerWidth + 'px';
+
+            canvas.style.height =
+                window.innerHeight + 'px';
+
+            ctx.setTransform(
+                ratio,
+                0,
+                0,
+                ratio,
+                0,
+                0
+            );
+
+        }
+
+
+        resizeCanvas();
+
+        window.addEventListener(
+            'resize',
+            resizeCanvas
+        );
+
+
+        const particles = [];
+
+        const particleCount =
+            isSmall ? 28 : 60;
+
+
+        for (
+            let i = 0;
+            i < particleCount;
+            i++
+        ) {
+
+            particles.push({
+
+                x:
+                    Math.random() *
+                    window.innerWidth,
+
+                y:
+                    Math.random() *
+                    window.innerHeight,
+
+                r:
+                    Math.random() * 3 +
+                    0.5,
+
+                vx:
+                    (Math.random() - .5) *
+                    .4,
+
+                vy:
+                    (Math.random() - .5) *
+                    .4,
+
+                a:
+                    Math.random() * .4 +
+                    .1
+
+            });
+
+        }
+
+
+        function drawParticles() {
+
+            ctx.clearRect(
+                0,
+                0,
+                window.innerWidth,
+                window.innerHeight
+            );
+
+
+            for (const p of particles) {
+
+                p.x += p.vx;
+                p.y += p.vy;
+
+
+                if (
+                    p.x < 0 ||
+                    p.x > window.innerWidth
+                ) {
+                    p.vx *= -1;
+                }
+
+
+                if (
+                    p.y < 0 ||
+                    p.y > window.innerHeight
+                ) {
+                    p.vy *= -1;
+                }
+
+
+                ctx.beginPath();
+
+                ctx.arc(
+                    p.x,
+                    p.y,
+                    p.r,
+                    0,
+                    Math.PI * 2
+                );
+
+                ctx.fillStyle =
+                    `rgba(
+                        10,
+                        61,
+                        46,
+                        ${p.a}
+                    )`;
+
+                ctx.fill();
+
+            }
+
+
+            for (
+                let i = 0;
+                i < particles.length;
+                i++
+            ) {
+
+                for (
+                    let j = i + 1;
+                    j < particles.length;
+                    j++
+                ) {
+
+                    const p = particles[i];
+                    const o = particles[j];
+
+                    const dx =
+                        p.x - o.x;
+
+                    const dy =
+                        p.y - o.y;
+
+                    const distance =
+                        Math.hypot(dx, dy);
+
+
+                    if (distance < 120) {
+
+                        ctx.strokeStyle =
+                            `rgba(
+                                22,
+                                160,
+                                133,
+                                ${
+                                    .08 *
+                                    (1 - distance / 120)
+                                }
+                            )`;
+
+                        ctx.lineWidth = .6;
+
+                        ctx.beginPath();
+
+                        ctx.moveTo(
+                            p.x,
+                            p.y
+                        );
+
+                        ctx.lineTo(
+                            o.x,
+                            o.y
+                        );
+
+                        ctx.stroke();
+
+                    }
+
+                }
+
+            }
+
+
+            requestAnimationFrame(
+                drawParticles
+            );
+
+        }
+
+
+        drawParticles();
+
+
+        /* =========================================
+           GSAP
+        ========================================= */
+
+        if (typeof gsap !== 'undefined') {
+
+            gsap.registerPlugin(
+                ScrollTrigger
+            );
+
+
+            /* -----------------------------------------
+               NAV
+            ----------------------------------------- */
+
+            gsap.from(
+                '#nav',
+                {
+                    y: -80,
+                    opacity: 0,
+                    duration: 1,
+                    ease: 'power4.out'
+                }
+            );
+
+
+            /* -----------------------------------------
+               HERO
+            ----------------------------------------- */
+
+            gsap.from(
+                '#heroTitle',
+                {
+                    y: 80,
+                    opacity: 0,
+                    duration: 1.2,
+                    delay: .2,
+                    ease: 'power4.out'
+                }
+            );
+
+
+            gsap.from(
+                '#heroDesc',
+                {
+                    y: 40,
+                    opacity: 0,
+                    duration: .9,
+                    delay: .4,
+                    ease: 'power3.out'
+                }
+            );
+
+
+            gsap.from(
+                '#heroActions',
+                {
+                    y: 30,
+                    opacity: 0,
+                    duration: .8,
+                    delay: .5
+                }
+            );
+
+
+            gsap.from(
+                '#heroVisual',
+                {
+                    y: isSmall ? 28 : 60,
+                    scale: isSmall ? .94 : .96,
+                    opacity: 0,
+                    duration: isSmall ? .9 : 1.2,
+                    delay: .25,
+                    ease: 'power4.out'
+                }
+            );
+
+
+            /* -----------------------------------------
+               FLOATING HERO CARDS
+            ----------------------------------------- */
+
+            gsap.to(
+                '#cardMain',
+                {
+                    y: isSmall ? -6 : -10,
+                    duration: isSmall ? 3.2 : 2.5,
+                    yoyo: true,
+                    repeat: -1,
+                    ease: 'sine.inOut'
+                }
+            );
+
+
+            gsap.to(
+                '#cardPres',
+                {
+                    y: isSmall ? -8 : -14,
+                    rotation: isSmall ? -1.5 : -2,
+                    duration: 3.3,
+                    yoyo: true,
+                    repeat: -1,
+                    ease: 'sine.inOut',
+                    delay: .3
+                }
+            );
+
+
+            gsap.to(
+                '#cardSkin',
+                {
+                    y: isSmall ? -7 : -12,
+                    rotation: isSmall ? 2 : 3,
+                    duration: 3.1,
+                    yoyo: true,
+                    repeat: -1,
+                    ease: 'sine.inOut',
+                    delay: .6
+                }
+            );
+
+
+            gsap.to(
+                '#blob',
+                {
+                    scale: 1.05,
+                    duration: 4,
+                    yoyo: true,
+                    repeat: -1,
+                    ease: 'sine.inOut'
+                }
+            );
+
+
+            /* -----------------------------------------
+               HERO MOUSE PARALLAX
+            ----------------------------------------- */
+
+            const heroVisual =
+                document.getElementById(
+                    'heroVisual'
+                );
+
+
+            if (!isTouch && heroVisual) {
+
+                window.addEventListener(
+                    'mousemove',
+                    event => {
+
+                        if (
+                            window.matchMedia(
+                                '(prefers-reduced-motion: reduce)'
+                            ).matches
+                        ) {
+                            return;
+                        }
+
+
+                        const rect =
+                            heroVisual.getBoundingClientRect();
+
+
+                        if (
+                            rect.width === 0 ||
+                            rect.height === 0
+                        ) {
+                            return;
+                        }
+
+
+                        const px =
+                            (
+                                event.clientX -
+                                (
+                                    rect.left +
+                                    rect.width / 2
+                                )
+                            ) /
+                            rect.width;
+
+
+                        const py =
+                            (
+                                event.clientY -
+                                (
+                                    rect.top +
+                                    rect.height / 2
+                                )
+                            ) /
+                            rect.height;
+
+
+                        gsap.to(
+                            '#cardMain',
+                            {
+                                x: px * 10,
+                                y: py * 8,
+                                duration: .8,
+                                ease: 'power3.out',
+                                overwrite: true
+                            }
+                        );
+
+
+                        gsap.to(
+                            '#cardPres',
+                            {
+                                x: px * -12,
+                                y: py * -8,
+                                duration: .8,
+                                ease: 'power3.out',
+                                overwrite: true
+                            }
+                        );
+
+
+                        gsap.to(
+                            '#cardSkin',
+                            {
+                                x: px * 14,
+                                y: py * 10,
+                                duration: .8,
+                                ease: 'power3.out',
+                                overwrite: true
+                            }
+                        );
+
+                    }
+                );
+
+            }
+
+
+            /* -----------------------------------------
+               FEATURE INTRO
+            ----------------------------------------- */
+
+            gsap.from(
+                '#featKicker',
+                {
+                    scrollTrigger: {
+                        trigger: '#features',
+                        start: 'top 80%'
+                    },
+                    y: 20,
+                    opacity: 0,
+                    duration: .6
+                }
+            );
+
+
+            gsap.from(
+                '#featTitle',
+                {
+                    scrollTrigger: {
+                        trigger: '#features',
+                        start: 'top 75%'
+                    },
+                    y: 50,
+                    opacity: 0,
+                    duration: .8
+                }
+            );
+
+
+            gsap.from(
+                '#featDesc',
+                {
+                    scrollTrigger: {
+                        trigger: '#features',
+                        start: 'top 70%'
+                    },
+                    y: 30,
+                    opacity: 0,
+                    duration: .8,
+                    delay: .2
+                }
+            );
+
+
+            /* -----------------------------------------
+               FEATURE CARDS
+            ----------------------------------------- */
+
+            gsap.utils
+                .toArray('.feature')
+                .forEach((el, i) => {
+
+                    gsap.from(
+                        el,
+                        {
+                            scrollTrigger: {
+                                trigger: el,
+                                start: 'top 85%'
+                            },
+                            y: 60,
+                            opacity: 0,
+                            duration: .8,
+                            delay: i * .05,
+                            ease: 'power3.out'
+                        }
+                    );
+
+                });
+
+
+            /* -----------------------------------------
+               QUOTES
+            ----------------------------------------- */
+
+            gsap.utils
+                .toArray('.quote-card')
+                .forEach((el, i) => {
+
+                    gsap.from(
+                        el,
+                        {
+                            scrollTrigger: {
+                                trigger: el,
+                                start: 'top 88%'
+                            },
+                            y: 40,
+                            opacity: 0,
+                            duration: .7,
+                            delay: i * .08
+                        }
+                    );
+
+                });
+
+
+            /* -----------------------------------------
+               HOW IT WORKS
+            ----------------------------------------- */
+
+            gsap.from(
+                '.how .step',
+                {
+                    scrollTrigger: {
+                        trigger: '#how',
+                        start: 'top 75%'
+                    },
+                    x: 80,
+                    opacity: 0,
+                    duration: .8,
+                    stagger: .12
+                }
+            );
+
+
+            /* -----------------------------------------
+               SAFETY
+            ----------------------------------------- */
+
+            gsap.from(
+                '.safety',
+                {
+                    scrollTrigger: {
+                        trigger: '.safety',
+                        start: 'top 80%'
+                    },
+                    y: 80,
+                    opacity: 0,
+                    scale: .98,
+                    duration: 1,
+                    ease: 'power4.out'
+                }
+            );
+
+
+            /* -----------------------------------------
+               NAV SCROLL STATE
+            ----------------------------------------- */
+
+            ScrollTrigger.create({
+
+                start: 'top -80',
+                end: 99999,
+
+                onUpdate: self => {
+
+                    const nav =
+                        document.getElementById(
+                            'nav'
+                        );
+
+
+                    if (!nav) {
+                        return;
+                    }
+
+
+                    nav.style.background =
+                        self.progress > 0
+                            ? 'rgba(255,255,255,0.86)'
+                            : 'rgba(255,255,255,0.72)';
+
+                }
+
+            });
+
+        }
+
+
+        /* =========================================
+           TOUCH FALLBACK
+        ========================================= */
+
+        if (isTouch) {
+
+            document.querySelectorAll(
+                'a, button'
+            ).forEach(element => {
+
+                element.addEventListener(
+                    'touchstart',
+                    () => {
+                        element.style.transform =
+                            'scale(.985)';
+                    },
+                    { passive: true }
+                );
+
+                element.addEventListener(
+                    'touchend',
+                    () => {
+                        element.style.transform = '';
+                    },
+                    { passive: true }
+                );
+
+            });
+
+        }
+
+    </script>
+
 </body>
 </html>
+```
